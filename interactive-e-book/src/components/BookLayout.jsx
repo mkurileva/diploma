@@ -4,7 +4,6 @@ import TextArea from "./TextArea"
 import NotesSidebar from "./NotesSidebar"
 
 function BookLayout() {
-  // загрузка сразу из localStorage
   const [highlights, setHighlights] = useState(() => {
     try {
       const saved = localStorage.getItem("highlights")
@@ -15,13 +14,10 @@ function BookLayout() {
   })
 
   const [activeColor, setActiveColor] = useState("yellow")
+  const [activeTool, setActiveTool] = useState("highlight") // ⭐ новый state
 
-  // сохранение
   useEffect(() => {
-    localStorage.setItem(
-      "highlights",
-      JSON.stringify(highlights)
-    )
+    localStorage.setItem("highlights", JSON.stringify(highlights))
   }, [highlights])
 
   // добавление хайлайта
@@ -37,12 +33,15 @@ function BookLayout() {
     ])
   }
 
+  // удаление хайлайта (ластик)
+  const removeHighlight = (id) => {
+    setHighlights((prev) => prev.filter((h) => h.id !== id))
+  }
+
   // обновление заметки
   const updateNote = (id, note) => {
     setHighlights((prev) =>
-      prev.map((h) =>
-        h.id === id ? { ...h, note } : h
-      )
+      prev.map((h) => (h.id === id ? { ...h, note } : h))
     )
   }
 
@@ -51,23 +50,23 @@ function BookLayout() {
       <Toolbar
         activeColor={activeColor}
         onChangeColor={setActiveColor}
+        activeTool={activeTool}
+        onChangeTool={setActiveTool}
       />
 
       <div className="layout">
         <TextArea
           highlights={highlights}
+          activeTool={activeTool}
           onHighlight={addHighlight}
+          onRemoveHighlight={removeHighlight}
           onUpdateNote={updateNote}
         />
 
-        <NotesSidebar highlights={highlights} />
+        <NotesSidebar />
       </div>
     </>
   )
 }
 
 export default BookLayout
-
-
-
-

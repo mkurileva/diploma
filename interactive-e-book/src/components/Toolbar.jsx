@@ -1,7 +1,12 @@
 import { useState } from "react"
 import { stories } from "../data/stories"
 
-function Toolbar({ activeColor, onChangeColor }) {
+function Toolbar({
+  activeColor,
+  onChangeColor,
+  activeTool,
+  onChangeTool,
+}) {
   const [collapsed, setCollapsed] = useState(false)
   const [showContents, setShowContents] = useState(false)
   const [showColors, setShowColors] = useState(false)
@@ -24,10 +29,29 @@ function Toolbar({ activeColor, onChangeColor }) {
             <span>🏠</span>
 
             {/* МАРКЕР */}
-            <span onClick={() => setShowColors(!showColors)}>🖍️</span>
+            <span
+              className={activeTool === "highlight" ? "active-tool" : ""}
+              onClick={() => {
+                onChangeTool("highlight")
+                setShowColors(!showColors)
+              }}
+            >
+              🖍️
+            </span>
 
-            {/* ВЫБОР ЦВЕТА */}
-            {showColors && (
+            {/* ЛАСТИК */}
+            <span
+              className={activeTool === "erase" ? "active-tool" : ""}
+              onClick={() => {
+                onChangeTool("erase")
+                setShowColors(false)
+              }}
+            >
+              🧽
+            </span>
+
+            {/* выбор цвета */}
+            {showColors && activeTool === "highlight" && (
               <div className="color-picker">
                 {colors.map((color) => (
                   <button
@@ -67,10 +91,7 @@ function Toolbar({ activeColor, onChangeColor }) {
             <h4>Содержание</h4>
             <ul>
               {stories.map((story) => (
-                <li
-                  key={story.id}
-                  onClick={() => handleScrollToStory(story.id)}
-                >
+                <li key={story.id} onClick={() => handleScrollToStory(story.id)}>
                   {story.title}
                 </li>
               ))}
@@ -83,4 +104,3 @@ function Toolbar({ activeColor, onChangeColor }) {
 }
 
 export default Toolbar
-

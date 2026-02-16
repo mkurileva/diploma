@@ -1,7 +1,13 @@
 import { stories } from "../data/stories"
 import Paragraph from "./Paragraph"
 
-function TextArea({ highlights, onHighlight, onUpdateNote }) {
+function TextArea({
+  highlights,
+  activeTool,
+  onHighlight,
+  onRemoveHighlight,
+  onUpdateNote,
+}) {
   return (
     <main className="text-area">
       {stories.map((story) => (
@@ -15,7 +21,9 @@ function TextArea({ highlights, onHighlight, onUpdateNote }) {
               index={index}
               storyId={story.id}
               highlights={highlights}
+              activeTool={activeTool}
               onHighlight={onHighlight}
+              onRemoveHighlight={onRemoveHighlight}
               onUpdateNote={onUpdateNote}
             />
           ))}
@@ -26,6 +34,7 @@ function TextArea({ highlights, onHighlight, onUpdateNote }) {
 }
 
 export default TextArea
+
 
 
 
