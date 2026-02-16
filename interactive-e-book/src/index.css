@@ -175,30 +175,43 @@ body {
   outline: 2px solid black;
 }
 
+.highlight-wrapper {
+  position: relative;
+  display: inline;
+}
+
 .note-icon {
-  margin-left: 6px;
+  margin-left: 4px;
   cursor: pointer;
   font-size: 14px;
+  user-select: none;
 }
 
 .note-popup {
   position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 360px;
+  top: 120px;
+
+  width: 260px;
   background: white;
-  padding: 16px;
+  padding: 12px;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  width: 300px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   z-index: 1000;
 }
 
 .note-popup textarea {
   width: 100%;
-  height: 80px;
+  min-height: 80px;
   resize: none;
-  margin-bottom: 12px;
 }
+
+.note-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 
 

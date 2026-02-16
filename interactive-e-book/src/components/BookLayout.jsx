@@ -4,20 +4,27 @@ import TextArea from "./TextArea"
 import NotesSidebar from "./NotesSidebar"
 
 function BookLayout() {
-  const [highlights, setHighlights] = useState([])
-  const [activeColor, setActiveColor] = useState("yellow")
+  // загрузка сразу из localStorage
+  const [highlights, setHighlights] = useState(() => {
+    try {
+      const saved = localStorage.getItem("highlights")
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
 
-  // загрузка
-  useEffect(() => {
-    const saved = localStorage.getItem("highlights")
-    if (saved) setHighlights(JSON.parse(saved))
-  }, [])
+  const [activeColor, setActiveColor] = useState("yellow")
 
   // сохранение
   useEffect(() => {
-    localStorage.setItem("highlights", JSON.stringify(highlights))
+    localStorage.setItem(
+      "highlights",
+      JSON.stringify(highlights)
+    )
   }, [highlights])
 
+  // добавление хайлайта
   const addHighlight = (data) => {
     setHighlights((prev) => [
       ...prev,
@@ -30,6 +37,7 @@ function BookLayout() {
     ])
   }
 
+  // обновление заметки
   const updateNote = (id, note) => {
     setHighlights((prev) =>
       prev.map((h) =>
@@ -51,6 +59,7 @@ function BookLayout() {
           onHighlight={addHighlight}
           onUpdateNote={updateNote}
         />
+
         <NotesSidebar highlights={highlights} />
       </div>
     </>
@@ -58,5 +67,7 @@ function BookLayout() {
 }
 
 export default BookLayout
+
+
 
 

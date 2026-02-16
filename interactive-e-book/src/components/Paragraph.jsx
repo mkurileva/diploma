@@ -6,71 +6,96 @@ function Paragraph({
   storyId,
   highlights,
   onHighlight,
-  onUpdateNote
+  onUpdateNote,
 }) {
-  const [activeNoteId, setActiveNoteId] = useState(null)
+  const [showNoteFor, setShowNoteFor] = useState(null)
 
+  // выделение текста
   const handleMouseUp = () => {
     const selection = window.getSelection()
-    const selectedText = selection.toString()
+    if (!selection.rangeCount) return
 
+    const selectedText = selection.toString().trim()
     if (!selectedText) return
+
+    const range = selection.getRangeAt(0)
+
+    const start = range.startOffset
+    const end = range.endOffset
+
+    // защита от кривых значений
+    if (start === end) return
 
     onHighlight({
       storyId,
       paragraphIndex: index,
-      text: selectedText,
+      start,
+      end,
     })
 
     selection.removeAllRanges()
   }
 
-  let renderedText = text
-
-  highlights
+  // берем хайлайты только этого абзаца
+  const paragraphHighlights = highlights
     .filter(
       (h) =>
         h.storyId === storyId &&
         h.paragraphIndex === index
     )
-    .forEach((h) => {
-      renderedText = renderedText.replace(
-        h.text,
-        `<mark class="highlight ${h.color}">
-          ${h.text}
-          <span class="note-icon" data-id="${h.id}">📝</span>
-        </mark>`
-      )
-    })
+    .sort((a, b) => a.start - b.start) // ВАЖНО: порядок!
 
-  const handleClick = (e) => {
-    if (e.target.classList.contains("note-icon")) {
-      setActiveNoteId(e.target.dataset.id)
+  // режем текст на куски
+  const parts = []
+  let lastIndex = 0
+
+  paragraphHighlights.forEach((h) => {
+    // обычный текст до выделения
+    if (h.start > lastIndex) {
+      parts.push(text.slice(lastIndex, h.start))
     }
-  }
 
-  const activeHighlight = highlights.find(h => h.id === activeNoteId)
+    // выделенный кусок
+    parts.push(
+      <mark
+        key={h.id}
+        className={`highlight ${h.color}`}
+        onClick={() => setShowNoteFor(h.id)}
+      >
+        {text.slice(h.start, h.end)}
+        {h.note && " 📝"}
+      </mark>
+    )
+
+    lastIndex = h.end
+  })
+
+  // остаток текста
+  parts.push(text.slice(lastIndex))
 
   return (
     <>
-      <p
-        className="paragraph"
-        onMouseUp={handleMouseUp}
-        onClick={handleClick}
-        dangerouslySetInnerHTML={{ __html: renderedText }}
-      />
+      <p className="paragraph" onMouseUp={handleMouseUp}>
+        {parts}
+      </p>
 
-      {activeHighlight && (
+      {/* окно заметки */}
+      {showNoteFor && (
         <div className="note-popup">
           <textarea
-            placeholder="Введите заметку…"
-            value={activeHighlight.note}
+            placeholder="Написать заметку..."
+            value={
+              paragraphHighlights.find(
+                (h) => h.id === showNoteFor
+              )?.note || ""
+            }
             onChange={(e) =>
-              onUpdateNote(activeHighlight.id, e.target.value)
+              onUpdateNote(showNoteFor, e.target.value)
             }
           />
-          <button onClick={() => setActiveNoteId(null)}>
-            Готово
+
+          <button onClick={() => setShowNoteFor(null)}>
+            Закрыть
           </button>
         </div>
       )}
@@ -79,6 +104,8 @@ function Paragraph({
 }
 
 export default Paragraph
+
+
 
 
 

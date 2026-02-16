@@ -8,10 +8,10 @@ function TextArea({ highlights, onHighlight, onUpdateNote }) {
         <section key={story.id} id={story.id} className="story-block">
           <h1 className="story-title">{story.title}</h1>
 
-          {story.text.map((p, index) => (
+          {story.text.map((paragraph, index) => (
             <Paragraph
               key={index}
-              text={p}
+              text={paragraph}
               index={index}
               storyId={story.id}
               highlights={highlights}
@@ -26,6 +26,8 @@ function TextArea({ highlights, onHighlight, onUpdateNote }) {
 }
 
 export default TextArea
+
+
 
 
 
