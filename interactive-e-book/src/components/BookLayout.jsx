@@ -20,18 +20,17 @@ function BookLayout() {
     localStorage.setItem("highlights", JSON.stringify(highlights))
   }, [highlights])
 
-  // добавление хайлайта
-  const addHighlight = (data) => {
-    setHighlights((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        color: activeColor,
-        note: "",
-        ...data,
-      },
-    ])
-  }
+const addHighlight = (data) => {
+  setHighlights((prev) => [
+    ...prev,
+    {
+      id: crypto.randomUUID(),
+      color: activeColor,
+      note: "",
+      ...data, // тут должны быть start, end, text, storyId, paragraphIndex
+    },
+  ])
+}
 
   // удаление хайлайта (ластик)
   const removeHighlight = (id) => {
@@ -63,7 +62,11 @@ function BookLayout() {
           onUpdateNote={updateNote}
         />
 
-        <NotesSidebar highlights={highlights} />
+        <NotesSidebar
+          highlights={highlights}
+          onUpdateNote={updateNote}
+        />
+
 
       </div>
     </>

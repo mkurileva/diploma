@@ -81,6 +81,24 @@ body {
   overflow-y: auto;
 }
 
+.note-item {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.note-text {
+  background: #fff3a0;
+  padding: 4px 6px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.notes-sidebar textarea {
+  width: 100%;
+  margin-top: 6px;
+}
+
 
 .story-block {
   max-width: 900px;

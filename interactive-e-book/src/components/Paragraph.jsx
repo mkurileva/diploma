@@ -70,6 +70,7 @@ function Paragraph({
     paragraphIndex: index,
     start,
     end,
+    text: selectedText, // ← ОБЯЗАТЕЛЬНО
   })
 
   selection.removeAllRanges()
