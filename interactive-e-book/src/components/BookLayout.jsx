@@ -63,7 +63,8 @@ function BookLayout() {
           onUpdateNote={updateNote}
         />
 
-        <NotesSidebar />
+        <NotesSidebar highlights={highlights} />
+
       </div>
     </>
   )

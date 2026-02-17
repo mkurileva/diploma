@@ -28,37 +28,53 @@ function Paragraph({
   }
 
   // выделение текста
-  const handleMouseUp = () => {
-    if (activeTool !== "highlight") return
+  const handleMouseUp = (e) => {
+  if (activeTool !== "highlight") return
 
-    const selection = window.getSelection()
-    if (!selection.rangeCount) return
+  const selection = window.getSelection()
+  if (!selection.rangeCount) return
 
-    const range = selection.getRangeAt(0)
-    const selectedText = selection.toString().trim()
+  const range = selection.getRangeAt(0)
+  const selectedText = selection.toString().trim()
+  if (!selectedText) return
 
-    if (!selectedText) return
+  const paragraphEl = e.currentTarget
 
-    const start = range.startOffset
-    const end = range.endOffset
-
-    if (start === end) return
-
-    // 🚫 запрещаем выделять поверх выделенного
-    if (isOverlapping(start, end)) {
-      selection.removeAllRanges()
-      return
-    }
-
-    onHighlight({
-      storyId,
-      paragraphIndex: index,
-      start,
-      end,
-    })
-
+  // 🚫 если начали внутри highlight → нельзя
+  if (
+    range.startContainer.parentElement?.closest(".highlight") ||
+    range.endContainer.parentElement?.closest(".highlight")
+  ) {
     selection.removeAllRanges()
+    return
   }
+
+  // ⭐ считаем offset относительно ВСЕГО абзаца
+  const preRange = range.cloneRange()
+  preRange.selectNodeContents(paragraphEl)
+  preRange.setEnd(range.startContainer, range.startOffset)
+
+  const start = preRange.toString().length
+  const end = start + selectedText.length
+
+  if (start === end) return
+
+  // 🚫 проверка пересечения
+  if (isOverlapping(start, end)) {
+    selection.removeAllRanges()
+    return
+  }
+
+  onHighlight({
+    storyId,
+    paragraphIndex: index,
+    start,
+    end,
+  })
+
+  selection.removeAllRanges()
+}
+
 
   // режем текст на куски
   const parts = []
