@@ -1,10 +1,17 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 function NotesSidebar({ highlights = [], onUpdateNote }) {
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState("")
+  const [localNotes, setLocalNotes] = useState([])
 
-  const notes = highlights.filter((h) => h.note || h.text)
+  // создаём локальную копию заметок
+  useEffect(() => {
+    setLocalNotes(highlights)
+  }, [highlights])
+
+  // показываем только заметки с текстом комментария
+  const notes = localNotes.filter((h) => h.note?.trim())
 
   const scrollToHighlight = (id) => {
     const el = document.getElementById(`highlight-${id}`)
@@ -22,8 +29,18 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
   }
 
   const saveNote = (id) => {
+    // обновляем локально
+    setLocalNotes((prev) =>
+      prev.map((h) =>
+        h.id === id ? { ...h, note: draft } : h
+      )
+    )
+
+    // отправляем родителю только после сохранения
     onUpdateNote(id, draft)
+
     setEditingId(null)
+    setDraft("")
   }
 
   return (
@@ -37,14 +54,20 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
           <div key={h.id} className="note-item">
             {/* выделенный текст */}
             <div
-              className="note-text"
+              className={`note-text highlight ${h.color}`}
               onClick={() => scrollToHighlight(h.id)}
-              style={{ cursor: "pointer", fontStyle: "italic" }}
+              style={{
+                cursor: "pointer",
+                fontStyle: "italic",
+                padding: "2px 4px",
+                borderRadius: "4px",
+                display: "inline-block",
+              }}
             >
+            
               “{h.text}”
             </div>
 
-            {/* редактирование */}
             {editingId === h.id ? (
               <>
                 <textarea
@@ -58,7 +81,7 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
               </>
             ) : (
               <>
-                <p>{h.note || "Без заметки"}</p>
+                <p>{h.note}</p>
 
                 <button onClick={() => startEditing(h)}>
                   редактировать
@@ -73,4 +96,3 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
 }
 
 export default NotesSidebar
-
