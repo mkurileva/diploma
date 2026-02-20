@@ -3,7 +3,7 @@ import Toolbar from "./Toolbar"
 import TextArea from "./TextArea"
 import NotesSidebar from "./NotesSidebar"
 
-function BookLayout() {
+function BookLayout({ onGoHome }) {
   const [highlights, setHighlights] = useState(() => {
     try {
       const saved = localStorage.getItem("highlights")
@@ -51,6 +51,7 @@ const addHighlight = (data) => {
         onChangeColor={setActiveColor}
         activeTool={activeTool}
         onChangeTool={setActiveTool}
+        onGoHome={onGoHome}
       />
 
       <div className="layout">

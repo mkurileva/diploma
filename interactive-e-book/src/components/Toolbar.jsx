@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { stories } from "../data/stories"
 
 function Toolbar({
@@ -7,6 +8,8 @@ function Toolbar({
   activeTool,
   onChangeTool,
 }) {
+  const navigate = useNavigate()
+
   const [collapsed, setCollapsed] = useState(false)
   const [showContents, setShowContents] = useState(false)
   const [showColors, setShowColors] = useState(false)
@@ -26,7 +29,13 @@ function Toolbar({
       <div className={`toolbar ${collapsed ? "collapsed" : ""}`}>
         {!collapsed && (
           <>
-            <span>🏠</span>
+            {/* HOME */}
+            <span
+              onClick={() => navigate("/")}
+              style={{ cursor: "pointer" }}
+            >
+              🏠
+            </span>
 
             {/* МАРКЕР */}
             <span
@@ -71,7 +80,9 @@ function Toolbar({
             <span>📝</span>
             <span>🔍</span>
 
-            <span onClick={() => setShowContents(!showContents)}>📑</span>
+            <span onClick={() => setShowContents(!showContents)}>
+              📑
+            </span>
           </>
         )}
 
@@ -91,7 +102,10 @@ function Toolbar({
             <h4>Содержание</h4>
             <ul>
               {stories.map((story) => (
-                <li key={story.id} onClick={() => handleScrollToStory(story.id)}>
+                <li
+                  key={story.id}
+                  onClick={() => handleScrollToStory(story.id)}
+                >
                   {story.title}
                 </li>
               ))}
