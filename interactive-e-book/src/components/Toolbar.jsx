@@ -1,6 +1,13 @@
 import { useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { stories } from "../data/stories"
+import homeIcon from "../assets/icons/home.svg"
+import markerIcon from "../assets/icons/highlight.svg"
+import eraserIcon from "../assets/icons/eraser1.svg"
+import glassIcon from "../assets/icons/glass.svg"
+import bookIcon from "../assets/icons/book.svg"
+import noteIcon from "../assets/icons/note.svg"
 
 function Toolbar({
   activeColor,
@@ -24,39 +31,54 @@ function Toolbar({
     }
   }
 
+    useEffect(() => {
+      // убираем классы при монтировании (на всякий случай)
+      document.body.classList.remove("cursor-highlight", "cursor-erase")
+
+      // добавляем нужный курсор при смене activeTool
+      if (activeTool === "highlight") {
+        document.body.classList.add("cursor-highlight")
+      } else if (activeTool === "erase") {
+        document.body.classList.add("cursor-erase")
+      }
+
+      // очистка при размонтировании компонента (уход со страницы)
+      return () => {
+        document.body.classList.remove("cursor-highlight", "cursor-erase")
+      }
+    }, [activeTool])
+
   return (
     <div className="toolbar-wrapper">
       <div className={`toolbar ${collapsed ? "collapsed" : ""}`}>
         {!collapsed && (
           <>
             {/* HOME */}
-            <span
-              onClick={() => navigate("/")}
-              style={{ cursor: "pointer" }}
-            >
-              🏠
+            <span onClick={() => navigate("/")}>
+              <img src={homeIcon} alt="home" className="toolbar-icon" />
             </span>
 
             {/* МАРКЕР */}
             <span
               className={activeTool === "highlight" ? "active-tool" : ""}
               onClick={() => {
-                onChangeTool("highlight")
-                setShowColors(!showColors)
+                // Если уже активен highlight — выключаем
+                onChangeTool(activeTool === "highlight" ? null : "highlight")
+                setShowColors(activeTool !== "highlight") // показываем цвета только если включаем
               }}
             >
-              🖍️
+              <img src={markerIcon} alt="highlight" className="toolbar-icon" />
             </span>
 
             {/* ЛАСТИК */}
             <span
               className={activeTool === "erase" ? "active-tool" : ""}
               onClick={() => {
-                onChangeTool("erase")
+                onChangeTool(activeTool === "erase" ? null : "erase")
                 setShowColors(false)
               }}
             >
-              🧽
+              <img src={eraserIcon} alt="eraser" className="toolbar-icon" />
             </span>
 
             {/* выбор цвета */}
@@ -77,11 +99,11 @@ function Toolbar({
               </div>
             )}
 
-            <span>📝</span>
-            <span>🔍</span>
+            <span><img src={noteIcon} alt="home" className="toolbar-icon" /></span>
+            <span><img src={glassIcon} alt="home" className="toolbar-icon" /></span>
 
             <span onClick={() => setShowContents(!showContents)}>
-              📑
+              <img src={bookIcon} alt="home" className="toolbar-icon" />
             </span>
           </>
         )}

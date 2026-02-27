@@ -14,7 +14,7 @@ function BookLayout({ onGoHome }) {
   })
 
   const [activeColor, setActiveColor] = useState("yellow")
-  const [activeTool, setActiveTool] = useState("highlight") // ⭐ новый state
+  const [activeTool, setActiveTool] = useState(null) // ⭐ новый state
 
   useEffect(() => {
     localStorage.setItem("highlights", JSON.stringify(highlights))

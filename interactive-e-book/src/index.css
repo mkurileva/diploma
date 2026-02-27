@@ -11,6 +11,15 @@ body {
   background: #e7eef1;
 }
 
+body.cursor-highlight {
+  cursor: url("/cursors/highlight.png") 8 24, auto;
+}
+
+
+body.cursor-erase {
+  cursor: url("/cursors/eraser1.png") 8 24, auto;
+}
+
 .home {
   min-height: 100vh;
   display: flex;
@@ -72,6 +81,12 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
+}
+
+.toolbar-icon {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
 }
 
 .toolbar span {
@@ -148,9 +163,41 @@ body {
   margin: 0 auto 120px auto;
 }
 
+/* делим на колонку + текст */
+.story-layout {
+  display: flex;
+  gap: 32px; /* расстояние между полосой и текстом */
+}
+
+/* декоративная полоса */
+.story-decor {
+  width: 200px;       /* регулируешь ширину */
+  flex-shrink: 0;
+
+  /* временно просто цвет */
+  background: #e6e6e6;
+
+  /* если хочешь картинку */
+  /* background-image: url("/ornament.png");
+     background-size: cover; */
+}
+
+/* тоже если с картинкой!!! */
+/* .story-decor {
+  width: 80px;
+  background-image: url("/ornament.png");
+  background-repeat: repeat-y;
+  background-size: contain;
+} */
+
+/* текст автоматически станет уже */
+.story-content {
+  flex: 1;
+}
+
 .story-title {
   font-size: 40px;
-  margin-bottom: 32px;
+  margin-bottom: 50px;
 }
 
 .text-area p {
