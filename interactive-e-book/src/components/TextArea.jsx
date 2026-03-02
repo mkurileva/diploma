@@ -14,7 +14,10 @@ function TextArea({
         <section key={story.id} id={story.id} className="story-block">
           <div className="story-layout">
 
-            <div className="story-decor" />
+              <div
+                className="story-decor"
+                style={{ backgroundImage: `url(${story.decor})` }}
+              />
 
             <div className="story-content">
               <h1 className="story-title">{story.title}</h1>

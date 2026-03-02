@@ -1,13 +1,13 @@
 @font-face {
-  font-family: 'Hauora';
-  src: url('/fonts/Hauora - Regular.otf') format('opentype');
+  font-family: 'Lora';
+  src: url('/fonts/Lora-VariableFont_wght.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
   margin: 0;
-  font-family: 'Hauora';
+  font-family: 'Lora';
   background: #e7eef1;
 }
 
@@ -50,6 +50,7 @@ body.cursor-erase {
 }
 
 .start-btn {
+  font-family: 'Lora';
   padding: 14px 28px;
   border: none;
   border-radius: 12px;
@@ -127,7 +128,7 @@ body.cursor-erase {
 }
 
 .notes-sidebar {
-  width: 300px;
+  width: 350px;
   background: white;
   padding: 16px;
   border-radius: 16px;
@@ -159,7 +160,7 @@ body.cursor-erase {
 
 
 .story-block {
-  max-width: 900px;
+  max-width: 850px;
   margin: 0 auto 120px auto;
 }
 
@@ -171,11 +172,14 @@ body.cursor-erase {
 
 /* декоративная полоса */
 .story-decor {
-  width: 200px;       /* регулируешь ширину */
+  width: 150px;       /* регулируешь ширину */
   flex-shrink: 0;
+  background-image: url("/src/assets/test.png");
+  background-repeat: repeat-y;
+  background-size: 150px 150px;
 
   /* временно просто цвет */
-  background: #e6e6e6;
+  /* background: #e6e6e6; */
 
   /* если хочешь картинку */
   /* background-image: url("/ornament.png");
@@ -197,7 +201,7 @@ body.cursor-erase {
 
 .story-title {
   font-size: 40px;
-  margin-bottom: 50px;
+  margin-bottom: 80px;
 }
 
 .text-area p {
