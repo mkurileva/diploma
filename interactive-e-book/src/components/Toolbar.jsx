@@ -2,11 +2,11 @@ import { useState } from "react"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { stories } from "../data/stories"
-import homeIcon from "../assets/icons/home.svg"
-import markerIcon from "../assets/icons/highlight.svg"
-import eraserIcon from "../assets/icons/eraser1.svg"
+import homeIcon from "../assets/icons/home1.png"
+import markerIcon from "../assets/icons/pen1.png"
+import eraserIcon from "../assets/icons/eraser1.png"
 import glassIcon from "../assets/icons/glass.svg"
-import bookIcon from "../assets/icons/book.svg"
+import bookIcon from "../assets/icons/contents1.png"
 import noteIcon from "../assets/icons/note.svg"
 
 function Toolbar({
@@ -98,9 +98,9 @@ function Toolbar({
                 ))}
               </div>
             )}
-
+{/* 
             <span><img src={noteIcon} alt="home" className="toolbar-icon" /></span>
-            <span><img src={glassIcon} alt="home" className="toolbar-icon" /></span>
+            <span><img src={glassIcon} alt="home" className="toolbar-icon" /></span> */}
 
             <span onClick={() => setShowContents(!showContents)}>
               <img src={bookIcon} alt="home" className="toolbar-icon" />

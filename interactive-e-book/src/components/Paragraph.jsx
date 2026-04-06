@@ -27,15 +27,14 @@ function Paragraph({
     )
   }
 
-  // выделение текста
-  const handleMouseUp = (e) => {
+const handleMouseUp = (e) => {
   if (activeTool !== "highlight") return
 
   const selection = window.getSelection()
   if (!selection.rangeCount) return
 
   const range = selection.getRangeAt(0)
-  const selectedText = selection.toString().trim()
+  const selectedText = selection.toString() // ❗ БЕЗ trim
   if (!selectedText) return
 
   const paragraphEl = e.currentTarget
@@ -49,11 +48,12 @@ function Paragraph({
     return
   }
 
-  // ⭐ считаем offset относительно ВСЕГО абзаца
+  // ⭐ создаём range от начала параграфа до начала выделения
   const preRange = range.cloneRange()
   preRange.selectNodeContents(paragraphEl)
   preRange.setEnd(range.startContainer, range.startOffset)
 
+  // 🔥 используем textContent (более точный, чем innerText)
   const start = preRange.toString().length
   const end = start + selectedText.length
 
@@ -70,12 +70,11 @@ function Paragraph({
     paragraphIndex: index,
     start,
     end,
-    text: selectedText, // ← ОБЯЗАТЕЛЬНО
+    text: selectedText,
   })
 
   selection.removeAllRanges()
 }
-
 
   // режем текст на куски
   const parts = []
@@ -89,6 +88,7 @@ function Paragraph({
     parts.push(
       <mark
         key={h.id}
+        id={`highlight-${h.id}`}
         className={`highlight ${h.color}`}
         onClick={() => {
           if (activeTool === "erase") {
@@ -125,7 +125,7 @@ function Paragraph({
               onUpdateNote(showNoteFor, e.target.value)
             }
           />
-          <button onClick={() => setShowNoteFor(null)}>Закрыть</button>
+          <button className="note-btn" onClick={() => setShowNoteFor(null)}>Закрыть</button>
         </div>
       )}
     </>
