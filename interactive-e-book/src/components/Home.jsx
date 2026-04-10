@@ -49,6 +49,7 @@ export default function LandingPage() {
   };
 
   return (
+    <>
     <div className="landing">
 
       {/* HERO (без анимации — он сразу виден) */}
@@ -143,6 +144,8 @@ export default function LandingPage() {
       </FadeSection>
 
 
+
+      </div>
         <footer className="footer">
         <div className="footer-content">
           <p>Проект выполнен в рамках выпускной квалификационной работы</p>
@@ -150,8 +153,6 @@ export default function LandingPage() {
           <p>2026</p>
         </div>
       </footer>
-      </div>
-
-    
+    </>
   );
 }
