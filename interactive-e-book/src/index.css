@@ -14,10 +14,10 @@
 
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: 'Hauora';
-  /* background: #e4dccb; */
   background-image: url('/src/assets/wood1.jpg');
-  background-attachment: fixed; 
+  background-attachment: fixed;
   background-size: cover;
 }
 
@@ -108,10 +108,6 @@ body.cursor-erase {
   margin-left: 8px;
 }
 
-.toolbar.collapsed .collapse {
-  margin-left: 0;
-}
-
 .toolbar.collapsed {
   padding: 8px 12px;
   gap: 0;
@@ -123,51 +119,44 @@ body.cursor-erase {
 
 .layout {
   display: flex;
-  gap: 24px;
-  padding: 24px;
-
-  align-items: flex-start; /* ВАЖНО */
+  gap: clamp(12px, 2vw, 24px);
+  padding: clamp(12px, 2vw, 24px);
+  align-items: flex-start;
 }
 
 .text-area {
   background-image: url('/src/assets/paper.jpg');
-  background-attachment: fixed; 
+  background-attachment: fixed;
   background-size: cover;
+
   flex: 1;
-  /* background: #fff; */
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
   padding: 24px;
-  margin-left: 50px;
+  margin-left: clamp(0px, 3vw, 50px);
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
 
 .notes-sidebar {
   background-image: url('/src/assets/paper.jpg');
-  background-attachment: fixed; 
+  background-attachment: fixed;
   background-size: cover;
+
   font-family: 'Gogol';
   font-size: 22px;
-  width: 350px;
-  /* background: white; */
+
+  width: clamp(220px, 25vw, 350px);
   padding: 16px;
-  /* border-radius: 16px; */
 
-  top: 64px;
   position: sticky;
+  top: 64px;
 
-  /* -webkit-mask-image: url("/src/assets/paper-edge.png");
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-
-  mask-image: url("/src/assets/paper-edge.png");
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat; */
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
 
   clip-path: polygon(
     0% 2%, 15% 3%, 35% 2%, 55% 4%, 75% 3%, 100% 2%,
     100% 98%, 85% 97%, 65% 99%, 45% 96%, 25% 98%, 0% 97%
   );
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
 }
 
 .note-title {
@@ -226,18 +215,11 @@ body.cursor-erase {
 
 /* декоративная полоса */
 .story-decor {
-  width: 150px;       /* регулируешь ширину */
+  width: 150px;
   flex-shrink: 0;
   background-image: url("/src/assets/test.png");
   background-repeat: repeat-y;
   background-size: 100px 200px;
-
-  /* временно просто цвет */
-  /* background: #e6e6e6; */
-
-  /* если хочешь картинку */
-  /* background-image: url("/ornament.png");
-     background-size: cover; */
 }
 
 /* тоже если с картинкой!!! */
@@ -271,13 +253,10 @@ body.cursor-erase {
   position: absolute;
   top: 56px;
   left: 50vw;
-
   background: white;
   padding: 12px 16px;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-
-  min-width: 200px;
 }
 
 .contents h4 {
@@ -358,10 +337,10 @@ body.cursor-erase {
 }
 
 .note-popup {
-  text-indent: 0px;
+  text-indent: 0;
   position: fixed;
-  right: 360px;
   top: 120px;
+  right: clamp(20px, 25vw, 360px);
 
   width: 260px;
   background: white;
@@ -377,6 +356,7 @@ body.cursor-erase {
   width: 100%;
   min-height: 80px;
   resize: none;
+  
 }
 
 .note-actions {
@@ -391,6 +371,62 @@ body.cursor-erase {
   -webkit-line-clamp: 3; /* количество строк */
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ===== АДАПТИВ ===== */
+
+@media (max-width: 1024px) {
+
+  .notes-sidebar {
+    width: 200px;
+    font-size: 18px;
+  }
+
+  .story-decor {
+    width: 80px;
+    background-size: 80px 160px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .layout {
+    flex-direction: column;
+  }
+
+  .notes-sidebar {
+    display: none;
+  }
+
+  .text-area {
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  .note-popup {
+    right: 10px;
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .story-decor {
+    display: none;
+  }
+
+  .story-content {
+    text-indent: 20px;
+  }
+
+  .toolbar {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .toolbar span {
+    display: none;
+  }
 }
 
 .landing {

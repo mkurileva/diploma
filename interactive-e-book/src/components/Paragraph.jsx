@@ -125,7 +125,7 @@ const handleMouseUp = (e) => {
               onUpdateNote(showNoteFor, e.target.value)
             }
           />
-          <button className="note-btn" onClick={() => setShowNoteFor(null)}>Закрыть</button>
+          <button className="note-btn" onClick={() => setShowNoteFor(null)}>Сохранить</button>
         </div>
       )}
     </>
