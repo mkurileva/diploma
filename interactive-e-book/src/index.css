@@ -391,6 +391,7 @@ body.cursor-erase {
 @media (max-width: 768px) {
 
   body {
+    background-image: none;
     background-color:azure;
   }
 
@@ -416,6 +417,7 @@ body.cursor-erase {
 @media (max-width: 480px) {
 
   body {
+    background-image: none;
     background-color:azure;
   }
 
