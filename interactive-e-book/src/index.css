@@ -392,7 +392,8 @@ body.cursor-erase {
 
   body {
     background-image: none;
-    background-color:azure;
+    background-color:#aaa;
+
   }
 
   .layout {
@@ -418,7 +419,7 @@ body.cursor-erase {
 
   body {
     background-image: none;
-    background-color:azure;
+    background-color:#aaa;
   }
 
   .story-decor {
