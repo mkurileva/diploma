@@ -390,6 +390,10 @@ body.cursor-erase {
 
 @media (max-width: 768px) {
 
+  body {
+    background-color:azure;
+  }
+
   .layout {
     flex-direction: column;
   }
@@ -410,6 +414,10 @@ body.cursor-erase {
 }
 
 @media (max-width: 480px) {
+
+  body {
+    background-color:azure;
+  }
 
   .story-decor {
     display: none;
