@@ -44,7 +44,7 @@ export default function LandingPage() {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate("/book");
+    navigate("/library");
     window.scrollTo(0, 0);
   };
 
@@ -62,6 +62,9 @@ export default function LandingPage() {
           </h1>
           <button className="btn" onClick={handleClick}>
             Начать читать
+          </button>
+          <button className="btn secondary" onClick={() => navigate("/editor")}>
+            Режим редактора
           </button>
         </div>
 
@@ -88,12 +91,13 @@ export default function LandingPage() {
 
           <div className="about-text">
             <p>
-              Это интерактивная электронная книга с рассказами Антона Павловича Чехова.
+              Это интерактивная электронная библиотека, в которой можно читать
+              художественные произведения и работать с текстом.
             </p>
             <p>
               Цель этого проекта — совместить все лучшее от традиционного и цифрового чтения
               и создать пространство, где читатель сможет воспользоваться всеми удобствами
-              электронной книги, сохранив при этом чувство уюта и спокойствия.
+              электронной книги, сохранив при этом чувство книжного уюта.
             </p>
           </div>
         </section>
@@ -127,19 +131,27 @@ export default function LandingPage() {
       {/* CONTENT */}
       <FadeSection>
         <section className="content">
-          <p className="hand">Содержание</p>
+          <p className="hand">Своя библиотека</p>
 
-          <div className="contents-list">
-            <p>Смерть чиновника</p>
-            <p>Толстый и тонкий</p>
-            <p>Хамелеон</p>
-            <p>Человек в футляре</p>
-            <p>О любви</p>
+          <div className="content-text">
+            <p>
+              Вы можете читать произведения не только из коллекции библиотеки,
+              но и добавлять собственные книги.
+            </p>
+            <p>
+              Добавляйте тексты, редактируйте их и формируйте
+              свою личную библиотеку для работы и чтения.
+            </p>
           </div>
 
+          <div className="content-actions">
           <button className="btn" onClick={handleClick}>
             Начать читать
           </button>
+          <button className="btn secondary" onClick={() => navigate("/editor")}>
+            Режим редактора
+          </button>
+          </div>
         </section>
       </FadeSection>
 

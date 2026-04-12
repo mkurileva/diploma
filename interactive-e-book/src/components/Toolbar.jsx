@@ -1,7 +1,5 @@
-import { useState } from "react"
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { stories } from "../data/stories"
 import homeIcon from "../assets/icons/home1.png"
 import markerIcon from "../assets/icons/pen1.png"
 import eraserIcon from "../assets/icons/eraser1.png"
@@ -14,6 +12,7 @@ function Toolbar({
   onChangeColor,
   activeTool,
   onChangeTool,
+  contentsItems = [],
 }) {
   const navigate = useNavigate()
 
@@ -22,6 +21,7 @@ function Toolbar({
   const [showColors, setShowColors] = useState(false)
 
   const colors = ["yellow", "pink", "green"]
+  const hasContents = contentsItems.length > 1
 
   const handleScrollToStory = (id) => {
     const element = document.getElementById(id)
@@ -31,22 +31,19 @@ function Toolbar({
     }
   }
 
-    useEffect(() => {
-      // убираем классы при монтировании (на всякий случай)
+  useEffect(() => {
+    document.body.classList.remove("cursor-highlight", "cursor-erase")
+
+    if (activeTool === "highlight") {
+      document.body.classList.add("cursor-highlight")
+    } else if (activeTool === "erase") {
+      document.body.classList.add("cursor-erase")
+    }
+
+    return () => {
       document.body.classList.remove("cursor-highlight", "cursor-erase")
-
-      // добавляем нужный курсор при смене activeTool
-      if (activeTool === "highlight") {
-        document.body.classList.add("cursor-highlight")
-      } else if (activeTool === "erase") {
-        document.body.classList.add("cursor-erase")
-      }
-
-      // очистка при размонтировании компонента (уход со страницы)
-      return () => {
-        document.body.classList.remove("cursor-highlight", "cursor-erase")
-      }
-    }, [activeTool])
+    }
+  }, [activeTool])
 
   return (
     <div className="toolbar-wrapper">
@@ -62,9 +59,8 @@ function Toolbar({
             <span
               className={activeTool === "highlight" ? "active-tool" : ""}
               onClick={() => {
-                // Если уже активен highlight — выключаем
                 onChangeTool(activeTool === "highlight" ? null : "highlight")
-                setShowColors(activeTool !== "highlight") // показываем цвета только если включаем
+                setShowColors(activeTool !== "highlight")
               }}
             >
               <img src={markerIcon} alt="highlight" className="toolbar-icon" />
@@ -81,7 +77,7 @@ function Toolbar({
               <img src={eraserIcon} alt="eraser" className="toolbar-icon" />
             </span>
 
-            {/* выбор цвета */}
+            {/* Цвета */}
             {showColors && activeTool === "highlight" && (
               <div className="color-picker">
                 {colors.map((color) => (
@@ -98,13 +94,13 @@ function Toolbar({
                 ))}
               </div>
             )}
-{/* 
-            <span><img src={noteIcon} alt="home" className="toolbar-icon" /></span>
-            <span><img src={glassIcon} alt="home" className="toolbar-icon" /></span> */}
 
-            <span onClick={() => setShowContents(!showContents)}>
-              <img src={bookIcon} alt="home" className="toolbar-icon" />
-            </span>
+            {/* СОДЕРЖАНИЕ — только если разделов больше одного */}
+            {hasContents && (
+              <span onClick={() => setShowContents(!showContents)}>
+                <img src={bookIcon} alt="contents" className="toolbar-icon" />
+              </span>
+            )}
           </>
         )}
 
@@ -119,16 +115,16 @@ function Toolbar({
           {collapsed ? "⮟" : "⮝"}
         </span>
 
-        {showContents && !collapsed && (
+        {showContents && !collapsed && hasContents && (
           <div className="contents">
             <h4>Содержание</h4>
             <ul>
-              {stories.map((story) => (
+              {contentsItems.map((item) => (
                 <li
-                  key={story.id}
-                  onClick={() => handleScrollToStory(story.id)}
+                  key={item.id}
+                  onClick={() => handleScrollToStory(item.id)}
                 >
-                  {story.title}
+                  {item.title}
                 </li>
               ))}
             </ul>

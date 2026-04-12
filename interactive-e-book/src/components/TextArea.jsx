@@ -7,20 +7,40 @@ function TextArea({
   onHighlight,
   onRemoveHighlight,
   onUpdateNote,
+  customBook = null,
 }) {
+  const contentToRender = customBook
+    ? [
+        {
+          id: customBook.id,
+          title: customBook.title,
+          author: customBook.author,
+          text: customBook.text,
+          decor: customBook.decor,
+        },
+      ]
+    : stories
+
   return (
     <main className="text-area">
-      {stories.map((story) => (
+      {contentToRender.map((story) => (
         <section key={story.id} id={story.id} className="story-block">
           <div className="story-layout">
-
-              <div
-                className="story-decor"
-                style={{ backgroundImage: `url(${story.decor})` }}
-              />
+            <div
+              className="story-decor"
+              style={
+                story.decor
+                  ? { backgroundImage: `url(${story.decor})` }
+                  : undefined
+              }
+            />
 
             <div className="story-content">
               <h1 className="story-title">{story.title}</h1>
+
+              {story.author && (
+                <p className="story-author">{story.author}</p>
+              )}
 
               {story.text.map((paragraph, index) => (
                 <Paragraph
@@ -36,7 +56,6 @@ function TextArea({
                 />
               ))}
             </div>
-
           </div>
         </section>
       ))}
@@ -45,9 +64,6 @@ function TextArea({
 }
 
 export default TextArea
-
-
-
 
 
 
