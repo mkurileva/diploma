@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+const API_URL = "http://localhost:5277/api/books";
 
 export default function BookForm() {
   const navigate = useNavigate();
@@ -11,62 +13,88 @@ export default function BookForm() {
   const [author, setAuthor] = useState("");
   const [text, setText] = useState("");
 
-  const books = useMemo(() => {
-    return JSON.parse(localStorage.getItem("books") || "[]");
-  }, []);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isEditMode) return;
 
-    const bookToEdit = books.find((book) => String(book.id) === String(id));
+    const fetchBook = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
 
-    if (!bookToEdit) {
-      navigate("/editor/books");
-      return;
-    }
+        const response = await fetch(`${API_URL}/${id}`);
 
-    setTitle(bookToEdit.title || "");
-    setAuthor(bookToEdit.author || "");
-    setText(Array.isArray(bookToEdit.text) ? bookToEdit.text.join("\n") : "");
-  }, [books, id, isEditMode, navigate]);
+        if (!response.ok) {
+          throw new Error("Не удалось загрузить книгу");
+        }
 
-  const saveBook = () => {
+        const book = await response.json();
+
+        setTitle(book.title || "");
+        setAuthor(book.author || "");
+        setText(book.text || "");
+      } catch (err) {
+        console.error("Ошибка загрузки книги:", err);
+        setError("Не удалось загрузить книгу");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBook();
+  }, [id, isEditMode]);
+
+  const saveBook = async () => {
     if (!title.trim() || !text.trim()) {
-      alert("Заполните название и текст");
+      setError("Заполните название и текст");
       return;
     }
 
-    const paragraphs = text
-      .split("\n")
-      .map((p) => p.trim())
-      .filter(Boolean);
+    try {
+      setIsSaving(true);
+      setError("");
 
-    if (isEditMode) {
-      const updatedBooks = books.map((book) =>
-        String(book.id) === String(id)
-          ? {
-              ...book,
-              title,
-              author,
-              text: paragraphs,
-            }
-          : book
-      );
-
-      localStorage.setItem("books", JSON.stringify(updatedBooks));
-    } else {
-      const newBook = {
-        id: Date.now().toString(),
-        title,
-        author,
-        text: paragraphs,
-        decor: null,
+      const bookData = {
+        id: isEditMode ? Number(id) : 0,
+        title: title.trim(),
+        author: author.trim(),
+        text: text.trim(),
+        isBuiltIn: false,
       };
 
-      localStorage.setItem("books", JSON.stringify([...books, newBook]));
-    }
+      const response = await fetch(
+        isEditMode ? `${API_URL}/${id}` : API_URL,
+        {
+          method: isEditMode ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookData),
+        }
+      );
 
-    navigate("/editor/books");
+      if (!response.ok) {
+        throw new Error(
+          isEditMode
+            ? "Не удалось обновить книгу"
+            : "Не удалось сохранить книгу"
+        );
+      }
+
+      navigate("/editor/books");
+    } catch (err) {
+      console.error("Ошибка сохранения книги:", err);
+      setError(
+        isEditMode
+          ? "Не удалось обновить книгу на сервере"
+          : "Не удалось сохранить книгу на сервер"
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -77,6 +105,10 @@ export default function BookForm() {
 
     navigate("/editor/books");
   };
+
+  if (isLoading) {
+    return <p>Загрузка книги...</p>;
+  }
 
   return (
     <div>
@@ -102,16 +134,22 @@ export default function BookForm() {
         onChange={(e) => setText(e.target.value)}
       />
 
-      <div className="form-actions">
-        <button className="btn-editor" onClick={saveBook}>
-          {isEditMode ? "Сохранить изменения" : "Сохранить"}
-        </button>
+      {error && <p className="form-error">{error}</p>}
 
-        <button className="btn-editor" onClick={handleCancel}>
+      <div className="form-actions">
+        <button className="btn-editor" onClick={handleCancel} disabled={isSaving}>
           Отмена
         </button>
 
-        
+        <button className="btn-editor" onClick={saveBook} disabled={isSaving}>
+          {isSaving
+            ? isEditMode
+              ? "Сохранение..."
+              : "Сохранение..."
+            : isEditMode
+            ? "Сохранить изменения"
+            : "Сохранить"}
+        </button>
       </div>
     </div>
   );

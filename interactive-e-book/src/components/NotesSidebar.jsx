@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react"
 
-function NotesSidebar({ highlights = [], onUpdateNote }) {
+function NotesSidebar({
+  highlights = [],
+  onUpdateNote,
+  onRemoveHighlight,
+}) {
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState("")
   const [localNotes, setLocalNotes] = useState([])
   const [expandedId, setExpandedId] = useState(null)
-  // создаём локальную копию заметок
+
   useEffect(() => {
     setLocalNotes(highlights)
   }, [highlights])
 
-  // показываем только заметки с текстом комментария
   const notes = localNotes.filter((h) => h.note?.trim())
 
   const scrollToHighlight = (id) => {
@@ -28,19 +31,39 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
     setDraft(highlight.note || "")
   }
 
+  const cancelEditing = () => {
+    setEditingId(null)
+    setDraft("")
+  }
+
   const saveNote = (id) => {
-    // обновляем локально
     setLocalNotes((prev) =>
       prev.map((h) =>
         h.id === id ? { ...h, note: draft } : h
       )
     )
 
-    // отправляем родителю только после сохранения
     onUpdateNote(id, draft)
-
     setEditingId(null)
     setDraft("")
+  }
+
+  const deleteNote = (id) => {
+    const confirmDelete = window.confirm("Удалить заметку и выделение?")
+    if (!confirmDelete) return
+
+    setLocalNotes((prev) => prev.filter((h) => h.id !== id))
+
+    if (editingId === id) {
+      setEditingId(null)
+      setDraft("")
+    }
+
+    if (expandedId === id) {
+      setExpandedId(null)
+    }
+
+    onRemoveHighlight(id)
   }
 
   return (
@@ -52,7 +75,6 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
       ) : (
         notes.map((h) => (
           <div key={h.id} className="note-item">
-            {/* выделенный текст */}
             <div
               className={`note-text highlight ${h.color} ${
                 expandedId === h.id ? "" : "clamped-text"
@@ -81,15 +103,30 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
                   onChange={(e) => setDraft(e.target.value)}
                 />
 
-                <button className="note-btn" onClick={() => saveNote(h.id)}>
-                  Сохранить
-                </button>
+                <div className="note-actions">
+                  <button
+                    className="note-btn"
+                    onClick={() => saveNote(h.id)}
+                  >
+                    Сохранить
+                  </button>
+
+                  <button
+                    className="note-btn"
+                    onClick={cancelEditing}
+                  >
+                    Отмена
+                  </button>
+                </div>
               </>
             ) : (
               <>
                 <p>{h.note}</p>
 
-                <button className="note-btn" onClick={() => startEditing(h)}>
+                <button
+                  className="note-btn"
+                  onClick={() => startEditing(h)}
+                >
                   Редактировать
                 </button>
 
@@ -98,6 +135,13 @@ function NotesSidebar({ highlights = [], onUpdateNote }) {
                   onClick={() => scrollToHighlight(h.id)}
                 >
                   Показать в тексте
+                </button>
+
+                <button
+                  className="note-btn"
+                  onClick={() => deleteNote(h.id)}
+                >
+                  Удалить
                 </button>
               </>
             )}
