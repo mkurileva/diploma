@@ -8,97 +8,100 @@ export default function LibraryPage() {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
+useEffect(() => {
     const fetchBooks = async () => {
       try {
-        setIsLoading(true);
-        setError("");
-
-        const response = await fetch(API_URL);
-
-        if (!response.ok) {
-          throw new Error("Не удалось загрузить книги");
-        }
-
+        const response = await fetch(`${API_URL}?all=true`);
         const data = await response.json();
-
-        // берём только пользовательские книги
-        const userBooks = data.filter((book) => !book.isBuiltIn);
-        setBooks(userBooks);
+        setBooks(data); // Просто кладем всё из БД
       } catch (err) {
-        console.error("Ошибка загрузки книг:", err);
-        setError("Не удалось загрузить книги с сервера");
+        console.error(err);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchBooks();
   }, []);
 
+  // Логика фильтрации
+  const filteredBooks = books.filter((book) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      book.title.toLowerCase().includes(query) ||
+      (book.author && book.author.toLowerCase().includes(query))
+    );
+  });
+
   return (
-    <div className="library-page">
-      <div className="library-header">
-        <h1>БИБЛИОТЕКА</h1>
+  <div className="library-page">
+    <div className="library-header">
+      <h1>БИБЛИОТЕКА</h1>
+      <button className="btn" onClick={() => navigate("/")}>На главную</button>
+    </div>
 
-        <button className="btn-editor" onClick={() => navigate("/")}>
-          На главную
-        </button>
-      </div>
+    <div className="search-container">
+      <input
+        type="text"
+        placeholder="Поиск по названию или автору..."
+        className="search-input"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+    </div>
 
+    {/* СЕКЦИЯ 1: КОЛЛЕКЦИЯ БИБЛИОТЕКИ */}
+    {filteredBooks.some(b => b.isBuiltIn) && ( //
       <section className="library-section">
         <h2>Коллекция библиотеки</h2>
-
         <div className="library-grid">
-          <div className="library-card">
-            <h3>Сборник рассказов</h3>
-            <p>Антон Павлович Чехов</p>
-            <button className="btn-editor" onClick={() => navigate("/book")}>
-              Открыть
-            </button>
-          </div>
+          {filteredBooks.filter(b => b.isBuiltIn).map(book => ( //
+            <div className="library-card" key={book.id}>
+              <h3>{book.title}</h3>
+              <p>{book.author}</p>
+              <button className="btn-editor" onClick={() => navigate(`/book/custom/${book.id}`)}>
+                Открыть
+              </button>
+            </div>
+          ))}
         </div>
       </section>
+    )}
 
-      <section className="library-section">
-        <h2>Пользовательские книги</h2>
-
-        {isLoading ? (
-          <div className="library-empty">
-            <p>Загрузка книг...</p>
-          </div>
-        ) : error ? (
-          <div className="library-empty">
-            <p>{error}</p>
-          </div>
-        ) : books.length === 0 ? (
-          <div className="library-empty">
-            <p>Пока нет добавленных книг</p>
-            <button
-              className="btn-editor"
-              onClick={() => navigate("/editor/books")}
-            >
+    {/* СЕКЦИЯ 2: ПОЛЬЗОВАТЕЛЬСКИЕ КНИГИ */}
+    <section className="library-section">
+      <h2>Пользовательские книги</h2>
+      
+      {isLoading ? (
+        <div className="library-empty"><p>Загрузка книг...</p></div>
+      ) : filteredBooks.filter(b => !b.isBuiltIn).length === 0 ? ( //[cite: 7]
+        <div className="library-empty">
+          <p>{searchQuery ? "Ничего не найдено" : "Пока нет добавленных книг"}</p>
+          {!searchQuery && (
+            <button className="btn-editor" onClick={() => navigate("/editor/books")}>
               Перейти в редактор
             </button>
-          </div>
+          )}
+        </div>
         ) : (
-          <div className="library-grid">
-            {books.map((book) => (
-              <div className="library-card" key={book.id}>
-                <h3>{book.title}</h3>
-                <p>{book.author || "Автор не указан"}</p>
-                <button
-                  className="btn-editor"
-                  onClick={() => navigate(`/book/custom/${book.id}`)}
-                >
-                  Открыть
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
-  );
+            <div className="library-grid">
+              {/* Мапим книги, у которых isBuiltIn === false */}
+              {filteredBooks.filter(b => !b.isBuiltIn).map((book) => ( //[cite: 7]
+                <div className="library-card" key={book.id}>
+                  <h3>{book.title}</h3>
+                  <p>{book.author || "Автор не указан"}</p>
+                  <button
+                    className="btn-editor"
+                    onClick={() => navigate(`/book/custom/${book.id}`)}
+                  >
+                    Открыть
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+  </div>
+);
 }

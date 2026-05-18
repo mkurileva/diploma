@@ -1,5 +1,5 @@
-import { stories } from "../data/stories"
-import Paragraph from "./Paragraph"
+import { stories } from "../data/stories";
+import Paragraph from "./Paragraph";
 
 function TextArea({
   highlights,
@@ -8,6 +8,8 @@ function TextArea({
   onRemoveHighlight,
   onUpdateNote,
   customBook = null,
+  bookId,
+  showToast,
 }) {
   const contentToRender = customBook
     ? [
@@ -19,7 +21,7 @@ function TextArea({
           decor: customBook.decor,
         },
       ]
-    : stories
+    : stories;
 
   return (
     <main className="text-area">
@@ -47,12 +49,13 @@ function TextArea({
                   key={index}
                   text={paragraph}
                   index={index}
-                  storyId={story.id}
+                  bookId={bookId}
                   highlights={highlights}
                   activeTool={activeTool}
                   onHighlight={onHighlight}
                   onRemoveHighlight={onRemoveHighlight}
                   onUpdateNote={onUpdateNote}
+                  showToast={showToast}
                 />
               ))}
             </div>
@@ -60,10 +63,10 @@ function TextArea({
         </section>
       ))}
     </main>
-  )
+  );
 }
 
-export default TextArea
+export default TextArea;
 
 
 

@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const API_URL = "http://localhost:5277/api/books";
 
-export default function BookForm() {
+// 1. Обязательно принимаем user из пропсов
+export default function BookForm({ user }) {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -48,6 +49,12 @@ export default function BookForm() {
   }, [id, isEditMode]);
 
   const saveBook = async () => {
+    // 2. Проверка: если юзер не определен (например, разлогинился), не даем сохранять
+    if (!user?.id) {
+      setError("Ошибка: Необходимо войти в аккаунт");
+      return;
+    }
+
     if (!title.trim() || !text.trim()) {
       setError("Заполните название и текст");
       return;
@@ -63,6 +70,8 @@ export default function BookForm() {
         author: author.trim(),
         text: text.trim(),
         isBuiltIn: false,
+        // 3. ПРИВЯЗЫВАЕМ КНИГУ К ТЕКУЩЕМУ ЮЗЕРУ
+        userId: user.id 
       };
 
       const response = await fetch(
@@ -102,7 +111,6 @@ export default function BookForm() {
       const confirmExit = window.confirm("Вы уверены? Данные не сохранятся");
       if (!confirmExit) return;
     }
-
     navigate("/editor/books");
   };
 
@@ -111,30 +119,37 @@ export default function BookForm() {
   }
 
   return (
-    <div>
+    <div className="form-container"> {/* Добавил контейнер для стилей */}
       <h1>{isEditMode ? "Редактировать книгу" : "Добавить книгу"}</h1>
 
-      <input
-        type="text"
-        placeholder="Название"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Введите название..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
 
-      <input
-        type="text"
-        placeholder="Автор"
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-      />
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Введите автора..."
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+      </div>
 
-      <textarea
-        placeholder="Текст книги"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+      <div className="input-group">
+        <textarea
+          placeholder="Вставьте или напишите текст..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={10}
+        />
+      </div>
 
-      {error && <p className="form-error">{error}</p>}
+      {error && <p className="form-error" style={{color: 'red'}}>{error}</p>}
 
       <div className="form-actions">
         <button className="btn-editor" onClick={handleCancel} disabled={isSaving}>
@@ -142,13 +157,7 @@ export default function BookForm() {
         </button>
 
         <button className="btn-editor" onClick={saveBook} disabled={isSaving}>
-          {isSaving
-            ? isEditMode
-              ? "Сохранение..."
-              : "Сохранение..."
-            : isEditMode
-            ? "Сохранить изменения"
-            : "Сохранить"}
+          {isSaving ? "Сохранение..." : isEditMode ? "Сохранить изменения" : "Сохранить"}
         </button>
       </div>
     </div>

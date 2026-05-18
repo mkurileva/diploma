@@ -1,13 +1,156 @@
-export default function Profile() {
+import { useState, useEffect } from "react";
+
+export default function Profile({ user, onLogout }) {
+  const [stats, setStats] = useState({
+    booksCount: 0,
+    notesCount: 0,
+    joinDate: ""
+  });
+  const [loading, setLoading] = useState(true);
+  
+  // Состояния для смены пароля
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwords, setPasswords] = useState({ old: "", new: "" });
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      if (!user?.id) return;
+
+      try {
+        setLoading(true);
+        // Используем существующий фильтр для книг и новый для заметок
+        const [booksRes, notesRes] = await Promise.all([
+          fetch(`http://localhost:5277/api/books?userId=${user.id}`),
+          fetch(`http://localhost:5277/api/notes/user/${user.id}`)
+        ]);
+
+        const booksData = await booksRes.json();
+        const notesData = await notesRes.json();
+
+        setStats({
+          booksCount: booksData.length,
+          notesCount: notesData.length,
+          joinDate: user.createdAt 
+            ? new Date(user.createdAt).toLocaleDateString() 
+            : "Не указана"
+        });
+      } catch (error) {
+        console.error("Ошибка при загрузке статистики:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserStats();
+  }, [user]);
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`http://localhost:5277/api/users/change-password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          oldPassword: passwords.old,
+          newPassword: passwords.new
+        })
+      });
+
+      if (res.ok) {
+        setMessage({ text: "Пароль успешно изменен!", type: "success" });
+        setPasswords({ old: "", new: "" });
+        setTimeout(() => setIsChangingPassword(false), 2000);
+      } else {
+        const errText = await res.text();
+        setMessage({ text: errText || "Ошибка при смене пароля", type: "error" });
+      }
+    } catch (err) {
+      setMessage({ text: "Ошибка соединения с сервером", type: "error" });
+    }
+  };
+
+  if (!user) return <p className="profile-msg">Пожалуйста, войдите в аккаунт</p>;
+
   return (
-    <div>
-      <h1>Личный кабинет</h1>
+    <div className="profile-container">
+      <header className="profile-header">
+        <div className="profile-avatar">
+          {user.username ? user.username[0].toUpperCase() : "U"}
+        </div>
+        <div className="profile-info">
+          <h1>{user.username}</h1>
+          <p className="profile-email">{user.email}</p>
+        </div>
+      </header>
 
-      <p>Имя: Мария</p>
-      <p>Email: example@mail.com</p>
+      <div className="profile-grid">
+        <div className="profile-card stats-card">
+          <h3>Статистика чтения</h3>
+          {loading ? (
+            <p>Загрузка данных...</p>
+          ) : (
+            <>
+              <div className="stats-row">
+                <span>Добавлено книг:</span>
+                <strong>{stats.booksCount}</strong>
+              </div>
+              <div className="stats-row">
+                <span>Сделано заметок:</span>
+                <strong>{stats.notesCount}</strong>
+              </div>
+              <div className="stats-row">
+                <span>В клубе с:</span>
+                <strong>{stats.joinDate}</strong>
+              </div>
+            </>
+          )}
+        </div>
 
-      <div className="avatar-placeholder">
-        Аватар
+        <div className="profile-card actions-card">
+          <h3>Настройки</h3>
+          
+          {!isChangingPassword ? (
+            <button className="profile-btn" onClick={() => setIsChangingPassword(true)}>
+              Сменить пароль
+            </button>
+          ) : (
+            <form className="password-form" onSubmit={handleChangePassword}>
+              <input 
+                type="password" 
+                placeholder="Старый пароль" 
+                required
+                value={passwords.old}
+                onChange={(e) => setPasswords({...passwords, old: e.target.value})}
+              />
+              <input 
+                type="password" 
+                placeholder="Новый пароль" 
+                required
+                value={passwords.new}
+                onChange={(e) => setPasswords({...passwords, new: e.target.value})}
+              />
+              <div className="form-buttons">
+                <button type="submit" className="profile-btn small">Ок</button>
+                <button 
+                  type="button" 
+                  className="profile-btn small secondary" 
+                  onClick={() => {setIsChangingPassword(false); setMessage({text:"", type:""})}}
+                >
+                  Отмена
+                </button>
+              </div>
+              {message.text && (
+                <p className={`msg-text ${message.type}`}>{message.text}</p>
+              )}
+            </form>
+          )}
+
+          <button className="profile-btn danger" onClick={onLogout}>
+            Выйти из аккаунта
+          </button>
+        </div>
       </div>
     </div>
   );

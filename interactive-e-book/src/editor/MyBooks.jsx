@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:5277/api/books";
 
-export default function MyBooks() {
+// 1. Добавляем проп { user }
+export default function MyBooks({ user }) {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -12,19 +13,24 @@ export default function MyBooks() {
 
   useEffect(() => {
     const fetchBooks = async () => {
+      // Если юзер еще не загрузился, ничего не делаем
+      if (!user?.id) return;
+
       try {
         setIsLoading(true);
         setError("");
 
-        const response = await fetch(API_URL);
+        // 2. Меняем URL: добавляем userId, чтобы сервер отфильтровал только НАШИ книги
+        const response = await fetch(`${API_URL}?userId=${user.id}`);
 
         if (!response.ok) {
           throw new Error("Не удалось загрузить книги");
         }
 
         const data = await response.json();
-        const userBooks = data.filter((book) => !book.isBuiltIn);
-        setBooks(userBooks);
+        
+        // 3. Убираем фильтрацию здесь, так как бэкенд уже прислал только то, что нужно
+        setBooks(data); 
       } catch (err) {
         console.error("Ошибка загрузки книг:", err);
         setError("Не удалось загрузить книги с сервера");
@@ -34,14 +40,16 @@ export default function MyBooks() {
     };
 
     fetchBooks();
-  }, []);
+  }, [user?.id]); // 4. Добавляем зависимость от ID пользователя
 
   const deleteBook = async (id) => {
     const confirmDelete = window.confirm("Удалить книгу?");
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
+      // При удалении тоже желательно передавать userId для безопасности, 
+      // если ты обновила Delete в контроллере
+      const response = await fetch(`${API_URL}/${id}?userId=${user.id}`, {
         method: "DELETE",
       });
 

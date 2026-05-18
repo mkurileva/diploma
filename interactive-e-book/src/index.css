@@ -156,6 +156,45 @@ body.cursor-erase {
   margin-top: 6px;
 }
 
+.notes-search-container {
+  width: 100%;
+  margin-bottom: 40px;
+  /* Убираем лишние паддинги у контейнера, чтобы не было двойных отступов */
+  padding: 0 10px; 
+  /* Добавляем это, чтобы ширина считалась корректно */
+  box-sizing: border-box; 
+}
+
+.notes-search-input {
+  /* Важно: border-box заставляет padding прятаться ВНУТРЬ ширины 100% */
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-family: 'Hauora', sans-serif;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: transparent;
+  outline: none;
+  /* Обнуляем возможные отступы, которые могли наследоваться */
+  text-indent: 0 !important; 
+  margin: 0;
+  display: block;
+}
+
+.notes-search-input:focus {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none; /* Убираем стандартные тени, которые могут "торчать" снизу */
+}
+
+.no-notes-msg {
+  margin-bottom: 30px;
+  font-family: Hauora;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
 
 .story-block {
   
@@ -337,67 +376,6 @@ body.cursor-erase {
   overflow: hidden;
 }
 
-/* ===== АДАПТИВ ===== */
-
-@media (max-width: 1024px) {
-
-  .notes-sidebar {
-    width: 200px;
-    font-size: 18px;
-  }
-
-  .story-decor {
-    width: 80px;
-    background-size: 80px 160px;
-  }
-}
-
-@media (max-width: 768px) {
-
-  .layout {
-    flex-direction: column;
-  }
-
-  .notes-sidebar {
-    display: none;
-  }
-
-  .text-area {
-    margin-left: 0;
-    padding: 16px;
-  }
-
-  .note-popup {
-    right: 10px;
-    width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-
-  body {
-    background-image: none;
-    background-color:#aaa;
-  }
-
-  .story-decor {
-    display: none;
-  }
-
-  .story-content {
-    text-indent: 20px;
-  }
-
-  .toolbar {
-    gap: 8px;
-    padding: 8px;
-  }
-
-  .toolbar span {
-    display: none;
-  }
-}
-
 .landing {
   font-family: Hauora;
   padding: 60px clamp(20px, 5vw, 100px);
@@ -467,9 +445,19 @@ body.cursor-erase {
 }
 
 .accent {
+  line-height: 0.6 !important; 
+  margin-bottom: 0 !important;
   font-family: Gogol;
   font-size: clamp(30px, 5vw, 70px);
   margin-left: 20px;
+  display: inline-block;
+}
+
+.accent1 {
+  line-height: 0.4 !important; 
+  margin-bottom: 0 !important;
+  font-family: Gogol;
+  font-size: clamp(30px, 5vw, 70px);
   display: inline-block;
 }
 
@@ -477,17 +465,18 @@ body.cursor-erase {
 .about {
   text-align: justify;
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 0.6fr 1fr;
   gap: 40px;
   align-items: center;
   margin-bottom: 60px;
 }
 
 .about img {
-  opacity: 0;
+  opacity: 100;
   width: 100%;
-  max-width: 600px;
-  height: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .about-text {
@@ -540,9 +529,116 @@ body.cursor-erase {
 
 /* HAND TEXT */
 .hand {
+  
   font-size: clamp(28px, 4vw, 70px);
   font-family: Gogol;
   margin-right: 10px;
+}
+
+.bookshelf {
+  margin-top: 120px;
+  display: flex;
+  width: 100%;
+  height: 450px;
+  gap: 10px;
+  align-items: flex-end; /* Книги стоят на "полке" */
+  overflow-x: auto; /* Позволяет прокручивать, если книг очень много */
+  padding-bottom: 20px;
+  scrollbar-width: none; /* Скрываем скроллбар */
+}
+
+.bookshelf::-webkit-scrollbar { display: none; }
+
+.book-item {
+  flex: 0 0 50px;
+  height: 400px;
+  display: flex;
+  overflow: hidden;
+  background-color: var(--book-color);
+  border-radius: 4px 12px 12px 4px;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+.book-item.active {
+  flex: 0 0 350px; /* Фиксированная ширина развернутой книги */
+}
+
+.book-spine {
+  width: 50px;
+  min-width: 50px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(0,0,0,0.05);
+}
+
+.spine-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Gogol';
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+/* ФИКСИРОВАННЫЙ ФОРМАТ ОБЛОЖКИ */
+.book-cover {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: rgba(255,255,255,0.05); /* Легкий блик на обложке */
+}
+
+.book-item.active .book-cover {
+  opacity: 1;
+}
+
+.cover-inner {
+  width: 250px; /* Ширина обложки */
+  height: 350px; /* Высота обложки */
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: var(--book-color);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+}
+
+.cover-title {
+  margin-top: -10px;
+  font-family: 'Hauora';
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 1.2;
+  color: #111;
+}
+
+.cover-author {
+  
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #444;
+}
+
+.read-btn {
+  color: #444;
+  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
+  border: 1px solid #444;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Hauora';
 }
 
 /* ANIMATION */
@@ -579,56 +675,6 @@ body.cursor-erase {
   font-size: 16px;
   margin: 6px 0;
   opacity: 0.8;
-}
-
-/* ====== АДАПТИВ ====== */
-
-/* планшеты */
-@media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-right {
-    justify-content: flex-start;
-  }
-
-  .about {
-    grid-template-columns: 1fr;
-  }
-
-  .features {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* телефоны */
-@media (max-width: 768px) {
-  .landing {
-    padding: 40px 20px;
-  }
-
-  .hero-right img {
-    margin-top: 40px;
-  }
-
-  .big-text {
-    font-size: 22px;
-  }
-
-  .hand {
-    font-size: 36px;
-  }
-
-  .features-list,
-  .contents-list {
-    font-size: 18px;
-    line-height: 1.4;
-  }
-
-  .btn {
-    width: 100%;
-  }
 }
 
 /* =========================
@@ -883,3 +929,395 @@ body.cursor-erase {
   border-radius: 20px;
 }
 
+.search-container {
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-family: 'Hauora', sans-serif;
+  border: 1px solid #111;
+  border-radius: 999px; /* Скругленный стиль как у твоих кнопок */
+  background: transparent;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Контейнер личного кабинета */
+.profile-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  font-family: 'Hauora', sans-serif;
+}
+
+/* Шапка профиля */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 50px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  background: #e8d5b5; /* Твой фирменный цвет книги Чехова */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-family: 'Gogol', serif;
+  color: #111;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+}
+
+.profile-info h1 {
+  font-family: 'Gogol', serif;
+  font-size: 36px;
+  margin: 0 0 5px 0;
+}
+
+.profile-email {
+  color: #888;
+  font-size: 16px;
+}
+
+/* Сетка карточек */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.profile-card {
+  padding: 30px;
+  background: #fdfcfb;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+}
+
+.profile-card h3 {
+  font-family: 'Gogol', serif;
+  font-size: 22px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e8d5b5;
+  display: inline-block;
+}
+
+/* Статистика */
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.stats-row strong {
+  color: #111;
+  font-weight: 600;
+}
+
+/* Кнопки в профиле */
+.profile-btn {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #111;
+  background: transparent;
+  border-radius: 999px; /* Pill-shape как в библиотеке */
+  cursor: pointer;
+  font-family: 'Hauora', sans-serif;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.profile-btn:hover {
+  background: #111;
+  color: #fff;
+}
+
+.profile-btn.danger {
+  border-color: #d9534f;
+  color: #d9534f;
+}
+
+.profile-btn.danger:hover {
+  background: #d9534f;
+  color: #fff;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-title {
+  font-family: 'Gogol', serif;
+  font-size: 28px;
+  margin-bottom: 25px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 18px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  box-sizing: border-box;
+  font-family: 'Hauora', sans-serif;
+}
+
+.btn-modal-primary {
+  width: 100%;
+  padding: 14px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.auth-switch {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.auth-switch span {
+  color: #111;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Стили для Hint-модалки */
+.hint-modal .hint-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.hint-modal p {
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.btn-modal-secondary {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.combined-container {
+  display: grid;
+  /* Левая колонка под текст, правая под картинку */
+  grid-template-columns: 2.2fr 1fr; 
+  gap: 80px;
+  align-items: start; /* Выравнивание по верхнему краю */
+  margin-top: 100px;
+  margin-bottom: 120px;
+}
+
+.combined-left {
+  display: flex;
+  flex-direction: column;
+  gap: 80px; /* Расстояние между "Чтением" и "Библиотекой" */
+}
+
+.big-text1 {
+  font-size: clamp(20px, 3vw, 40px);
+  line-height: 1;
+  max-width: 820px;
+  
+}
+
+/* Контейнер правой колонки */
+.combined-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Это прижмет всё содержимое (включая картинку) вправо */
+  width: 100%;
+}
+
+/* Сама картинка */
+.tall-halftone-img {
+  height: 580px; /* Твоя фиксированная высота */
+  width: auto;   /* Ширина подстроится пропорционально */
+  
+  /* Гарантируем привязку к правому краю */
+  display: block;
+  margin-left: auto; 
+  
+  /* Если используешь Grid в родителе, можно добавить и это: */
+  justify-self: end;
+
+}
+
+.text-area {
+  position: relative;
+  z-index: 10; /* Поднимаем текст выше всего остального */
+}
+
+.paragraph {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+/* ====== ПОЛНАЯ АДАПТИВНОСТЬ ПРОЕКТА ====== */
+
+/* Планшеты и небольшие ноутбуки */
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column;
+    padding: 10px;
+    gap: 0;
+  }
+
+  /* Читалка: скрываем сайдбар для чистоты интерфейса на мобилках */
+  .notes-sidebar {
+    display: none; 
+  }
+
+  .text-area {
+    margin-left: 0;
+    padding: 20px;
+    width: 100%;
+    box-shadow: none;
+    background-attachment: scroll; /* Улучшает производительность на мобилках */
+  }
+
+  /* Тулбар: фиксируем снизу для удобства управления пальцем */
+  .toolbar-wrapper {
+    position: fixed;
+    top: auto;
+    bottom: 20px;
+    width: 100%;
+    left: 0;
+  }
+
+  .toolbar {
+    margin: 0 auto;
+    width: fit-content;
+    scale: 0.9;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+}
+
+/* Смартфоны */
+@media (max-width: 768px) {
+  /* 1. ГЛАВНАЯ СТРАНИЦА: Отступы и Кнопки */
+  .landing {
+    padding: 30px 20px;
+  }
+
+  .hero, .description, .about, .combined-container {
+    margin-bottom: 40px !important; /* Уменьшаем гигантские дыры */
+    margin-top: 0 !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  /* Исправление кнопок: теперь они с отступом и не гигантские */
+  .hero-left .btn, .content-actions .btn {
+    width: 100%;
+    max-width: 320px; /* Чтобы не растягивались на весь экран планшета */
+    margin: 0 auto 12px auto !important; /* Центрируем и добавляем отступ СНИЗУ */
+    display: block;
+  }
+
+  .hero-left .btn:last-child, .content-actions .btn:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* 2. ЛИЧНЫЙ КАБИНЕТ: Карточки в ряд */
+  .profile-container {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr; /* Статистика строго вертикально */
+    gap: 20px;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  /* 3. ШРИФТЫ И КАРТИНКИ */
+  .hand {
+    font-size: 32px !important;
+    line-height: 1.1 !important;
+    text-align: center;
+  }
+
+  .tall-halftone-img {
+    height: 300px !important; /* Ограничиваем высоту на мобилке */
+    width: 100% !important;
+    object-fit: cover;
+    transform: rotate(0deg) !important; /* Убираем наклон для стабильности верстки */
+  }
+
+  .combined-right {
+    order: -1; /* Картинка над текстом */
+    align-items: center;
+  }
+}

@@ -9,17 +9,26 @@ function NotesSidebar({
   const [draft, setDraft] = useState("")
   const [localNotes, setLocalNotes] = useState([])
   const [expandedId, setExpandedId] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("") // Состояние поиска
 
   useEffect(() => {
     setLocalNotes(highlights)
   }, [highlights])
 
-  const notes = localNotes.filter((h) => h.note?.trim())
+  const allNotes = localNotes.filter((h) => h.note?.trim())
+
+  // Фильтрация заметок по поисковому запросу
+  const filteredNotes = allNotes.filter((h) => {
+    const query = searchQuery.toLowerCase()
+    return (
+      h.note.toLowerCase().includes(query) || 
+      h.text.toLowerCase().includes(query)
+    )
+  })
 
   const scrollToHighlight = (id) => {
     const el = document.getElementById(`highlight-${id}`)
     if (!el) return
-
     el.scrollIntoView({
       behavior: "smooth",
       block: "center",
@@ -42,7 +51,6 @@ function NotesSidebar({
         h.id === id ? { ...h, note: draft } : h
       )
     )
-
     onUpdateNote(id, draft)
     setEditingId(null)
     setDraft("")
@@ -51,18 +59,9 @@ function NotesSidebar({
   const deleteNote = (id) => {
     const confirmDelete = window.confirm("Удалить заметку и выделение?")
     if (!confirmDelete) return
-
     setLocalNotes((prev) => prev.filter((h) => h.id !== id))
-
-    if (editingId === id) {
-      setEditingId(null)
-      setDraft("")
-    }
-
-    if (expandedId === id) {
-      setExpandedId(null)
-    }
-
+    if (editingId === id) { setEditingId(null); setDraft(""); }
+    if (expandedId === id) { setExpandedId(null); }
     onRemoveHighlight(id)
   }
 
@@ -70,21 +69,30 @@ function NotesSidebar({
     <aside className="notes-sidebar">
       <h3 className="note-title">Заметки</h3>
 
-      {notes.length === 0 ? (
+      {/* Поле поиска в стиле библиотеки */}
+      <div className="notes-search-container">
+        <input
+          type="text"
+          className="notes-search-input"
+          placeholder="Поиск в заметках..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {allNotes.length === 0 ? (
         <p>Здесь будут заметки</p>
+      ) : filteredNotes.length === 0 ? (
+        <p className="no-notes-msg">Ничего не найдено</p>
       ) : (
-        notes.map((h) => (
+        filteredNotes.map((h) => (
           <div key={h.id} className="note-item">
             <div
               className={`note-text highlight ${h.color} ${
                 expandedId === h.id ? "" : "clamped-text"
               }`}
               onClick={() => {
-                if (expandedId === h.id) {
-                  setExpandedId(null)
-                } else {
-                  setExpandedId(h.id)
-                }
+                setExpandedId(expandedId === h.id ? null : h.id)
               }}
               style={{
                 cursor: "pointer",
@@ -102,19 +110,11 @@ function NotesSidebar({
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                 />
-
                 <div className="note-actions">
-                  <button
-                    className="note-btn"
-                    onClick={() => saveNote(h.id)}
-                  >
+                  <button className="note-btn" onClick={() => saveNote(h.id)}>
                     Сохранить
                   </button>
-
-                  <button
-                    className="note-btn"
-                    onClick={cancelEditing}
-                  >
+                  <button className="note-btn" onClick={cancelEditing}>
                     Отмена
                   </button>
                 </div>
@@ -122,25 +122,13 @@ function NotesSidebar({
             ) : (
               <>
                 <p>{h.note}</p>
-
-                <button
-                  className="note-btn"
-                  onClick={() => startEditing(h)}
-                >
-                  Редактировать
+                <button className="note-btn" onClick={() => startEditing(h)}>
+                  Изменить
                 </button>
-
-                <button
-                  className="note-btn"
-                  onClick={() => scrollToHighlight(h.id)}
-                >
-                  Показать в тексте
+                <button className="note-btn" onClick={() => scrollToHighlight(h.id)}>
+                  Найти в тексте
                 </button>
-
-                <button
-                  className="note-btn"
-                  onClick={() => deleteNote(h.id)}
-                >
+                <button className="note-btn" onClick={() => deleteNote(h.id)}>
                   Удалить
                 </button>
               </>
