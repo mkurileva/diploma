@@ -25,7 +25,6 @@ body.cursor-highlight {
   cursor: url("/cursors/pen1.png") 8 24, auto;
 }
 
-
 body.cursor-erase {
   cursor: url("/cursors/eraser1.png") 8 24, auto;
 }
@@ -43,7 +42,6 @@ body.cursor-erase {
   align-items: center;
   gap: 16px;
   padding: 10px 16px;
-
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
@@ -59,10 +57,6 @@ body.cursor-erase {
 .toolbar span {
   cursor: pointer;
 }
-
-/* .collapse {
-  margin-left: 8px;
-} */
 
 .toolbar.collapsed {
   padding: 8px 12px;
@@ -84,11 +78,9 @@ body.cursor-erase {
   background-image: url('/src/assets/paper.jpg');
   background-attachment: fixed;
   background-size: cover;
-
   flex: 1;
   padding: 24px;
   margin-left: clamp(0px, 3vw, 50px);
-
   box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
 
@@ -96,19 +88,14 @@ body.cursor-erase {
   background-image: url('/src/assets/paper.jpg');
   background-attachment: fixed;
   background-size: cover;
-
   font-family: 'Gogol';
   font-size: 22px;
-
   width: clamp(220px, 25vw, 350px);
   padding: 16px;
-
   position: sticky;
   top: 64px;
-
   max-height: calc(100vh - 120px);
   overflow-y: auto;
-
   clip-path: polygon(
     0% 2%, 15% 3%, 35% 2%, 55% 4%, 75% 3%, 100% 2%,
     100% 98%, 85% 97%, 65% 99%, 45% 96%, 25% 98%, 0% 97%
@@ -159,14 +146,11 @@ body.cursor-erase {
 .notes-search-container {
   width: 100%;
   margin-bottom: 40px;
-  /* Убираем лишние паддинги у контейнера, чтобы не было двойных отступов */
   padding: 0 10px; 
-  /* Добавляем это, чтобы ширина считалась корректно */
   box-sizing: border-box; 
 }
 
 .notes-search-input {
-  /* Важно: border-box заставляет padding прятаться ВНУТРЬ ширины 100% */
   box-sizing: border-box;
   width: 100%;
   padding: 10px 15px;
@@ -176,7 +160,6 @@ body.cursor-erase {
   border-radius: 999px;
   background: transparent;
   outline: none;
-  /* Обнуляем возможные отступы, которые могли наследоваться */
   text-indent: 0 !important; 
   margin: 0;
   display: block;
@@ -184,7 +167,7 @@ body.cursor-erase {
 
 .notes-search-input:focus {
   background: rgba(255, 255, 255, 0.5);
-  box-shadow: none; /* Убираем стандартные тени, которые могут "торчать" снизу */
+  box-shadow: none;
 }
 
 .no-notes-msg {
@@ -195,40 +178,22 @@ body.cursor-erase {
   font-size: 14px;
 }
 
-
 .story-block {
-  
   max-width: 750px;
   margin: 0 auto 120px auto;
 }
 
-/* делим на колонку + текст */
 .story-layout {
   display: flex;
-  gap: 18px; /* расстояние между полосой и текстом */
+  gap: 18px;
 }
 
-/* декоративная полоса */
 .story-decor {
   display: none;
-  /* width: 150px;
-  flex-shrink: 0;
-  background-image: url("/src/assets/test.png");
-  background-repeat: repeat-y;
-  background-size: 100px 200px; */
 }
 
-/* тоже если с картинкой!!! */
-/* .story-decor {
-  width: 80px;
-  background-image: url("/ornament.png");
-  background-repeat: repeat-y;
-  background-size: contain;
-} */
-
-/* текст автоматически станет уже */
 .story-content {
-  text-indent: 50px; /* Отступ в пикселях */
+  text-indent: 50px;
   flex: 1;
 }
 
@@ -242,7 +207,6 @@ body.cursor-erase {
   text-indent: 0;
   font-size: 20px;
   opacity: 0.7;
-  
 }
 
 .text-area p {
@@ -288,17 +252,9 @@ body.cursor-erase {
   border-radius: 4px;
 }
 
-.highlight.yellow {
-  background: #BCC5D6;
-}
-
-.highlight.pink {
-  background: #FCD4B0;
-}
-
-.highlight.green {
-  background: #F3EAC8;
-}
+.highlight.yellow { background: #BCC5D6; }
+.highlight.pink { background: #FCD4B0; }
+.highlight.green { background: #F3EAC8; }
 
 .color-picker {
   display: flex;
@@ -322,10 +278,7 @@ body.cursor-erase {
 .color-btn.yellow { background: #BCC5D6; }
 .color-btn.pink { background: #FCD4B0; }
 .color-btn.green { background: #F3EAC8; }
-
-.color-btn.active {
-  outline: 2px solid black;
-}
+.color-btn.active { outline: 2px solid black; }
 
 .highlight-wrapper {
   position: relative;
@@ -344,7 +297,6 @@ body.cursor-erase {
   position: fixed;
   top: 120px;
   right: clamp(20px, 25vw, 360px);
-
   width: 260px;
   background: white;
   padding: 12px;
@@ -359,7 +311,6 @@ body.cursor-erase {
   width: 100%;
   min-height: 80px;
   resize: none;
-  
 }
 
 .note-actions {
@@ -371,7 +322,7 @@ body.cursor-erase {
 
 .clamped-text {
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* количество строк */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -383,11 +334,9 @@ body.cursor-erase {
   background-attachment: fixed; 
   background-size: cover;
   color: #111;
-
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
   padding-bottom: 10%;
 }
 
@@ -529,7 +478,6 @@ body.cursor-erase {
 
 /* HAND TEXT */
 .hand {
-  
   font-size: clamp(28px, 4vw, 70px);
   font-family: Gogol;
   margin-right: 10px;
@@ -541,10 +489,10 @@ body.cursor-erase {
   width: 100%;
   height: 450px;
   gap: 10px;
-  align-items: flex-end; /* Книги стоят на "полке" */
-  overflow-x: auto; /* Позволяет прокручивать, если книг очень много */
+  align-items: flex-end; 
+  overflow-x: auto; 
   padding-bottom: 20px;
-  scrollbar-width: none; /* Скрываем скроллбар */
+  scrollbar-width: none; 
 }
 
 .bookshelf::-webkit-scrollbar { display: none; }
@@ -562,7 +510,7 @@ body.cursor-erase {
 }
 
 .book-item.active {
-  flex: 0 0 350px; /* Фиксированная ширина развернутой книги */
+  flex: 0 0 350px; 
 }
 
 .book-spine {
@@ -583,7 +531,6 @@ body.cursor-erase {
   white-space: nowrap;
 }
 
-/* ФИКСИРОВАННЫЙ ФОРМАТ ОБЛОЖКИ */
 .book-cover {
   flex: 1;
   display: flex;
@@ -591,7 +538,7 @@ body.cursor-erase {
   align-items: center;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background: rgba(255,255,255,0.05); /* Легкий блик на обложке */
+  background: rgba(255,255,255,0.05); 
 }
 
 .book-item.active .book-cover {
@@ -599,8 +546,8 @@ body.cursor-erase {
 }
 
 .cover-inner {
-  width: 250px; /* Ширина обложки */
-  height: 350px; /* Высота обложки */
+  width: 250px; 
+  height: 350px; 
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -620,7 +567,6 @@ body.cursor-erase {
 }
 
 .cover-author {
-  
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -641,13 +587,10 @@ body.cursor-erase {
   font-family: 'Hauora';
 }
 
-/* ANIMATION */
 .fade-section {
   opacity: 0;
   transform: translateY(30px) scale(0.98);
-  transition: 
-    opacity 0.8s ease,
-    transform 0.8s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .fade-section.visible {
@@ -655,10 +598,8 @@ body.cursor-erase {
   transform: translateY(0) scale(1);
 }
 
-/* FOOTER */
 .footer {
   margin-left: calc(-50vw + 50%);
-
   background: #111;
   color: #fff;
   padding: 60px clamp(20px, 5vw, 100px);
@@ -677,10 +618,6 @@ body.cursor-erase {
   opacity: 0.8;
 }
 
-/* =========================
-   РЕДАКТОР — LAYOUT
-========================= */
-
 .editor-layout {
   display: flex;
   min-height: 100vh;
@@ -695,33 +632,23 @@ body.cursor-erase {
   border-radius: 999px;
   background: transparent;
   cursor: pointer;
-
   font-family: 'Hauora';
   font-size: 14px;
-
   transition: all 0.2s ease;
 }
-
-/* =========================
-   SIDEBAR
-========================= */
 
 .editor-sidebar {
   width: clamp(200px, 22vw, 280px);
   background-image: url('/src/assets/paper.jpg');
   background-size: cover;
   background-attachment: fixed;
-
   padding: 20px;
   font-family: 'Gogol';
   font-size: 24px;
-
   position: sticky;
   top: 24px;
   height: fit-content;
-
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-
   clip-path: polygon(
     0% 2%, 20% 3%, 40% 2%, 60% 4%, 80% 3%, 100% 2%,
     100% 98%, 80% 97%, 60% 99%, 40% 96%, 20% 98%, 0% 97%
@@ -748,13 +675,8 @@ body.cursor-erase {
   transition: 0.2s;
 }
 
-.editor-sidebar a:hover {
-  background: rgba(0,0,0,0.06);
-}
-
-.editor-sidebar a.active {
-  background: rgba(0,0,0,0.1);
-}
+.editor-sidebar a:hover { background: rgba(0,0,0,0.06); }
+.editor-sidebar a.active { background: rgba(0,0,0,0.1); }
 
 .editor-sidebar button {
   margin-top: 30px;
@@ -766,24 +688,14 @@ body.cursor-erase {
   cursor: pointer;
 }
 
-/* =========================
-   CONTENT AREA
-========================= */
-
 .editor-content {
   flex: 1;
-
   background-image: url('/src/assets/paper.jpg');
   background-size: cover;
   background-attachment: fixed;
-
   padding: clamp(16px, 3vw, 40px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
-
-/* =========================
-   КАРТОЧКИ КНИГ
-========================= */
 
 .books-grid {
   display: grid;
@@ -797,7 +709,6 @@ body.cursor-erase {
   padding: 16px;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -824,16 +735,11 @@ body.cursor-erase {
   cursor: pointer;
 }
 
-/* =========================
-   ФОРМА КНИГИ
-========================= */
-
 .editor-content input,
 .editor-content textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 16px;
-
   border: 1px solid #aaa;
   border-radius: 10px;
   font-family: 'Hauora';
@@ -843,10 +749,6 @@ body.cursor-erase {
   min-height: 260px;
   resize: vertical;
 }
-
-/* =========================
-   PROFILE
-========================= */
 
 .avatar-placeholder {
   width: 120px;
@@ -869,10 +771,6 @@ body.cursor-erase {
   color: #111;
 }
 
-.library-header {
-  margin-bottom: 60px;
-}
-
 .library-header h1 {
   margin: 0 0 12px;
   font-size: clamp(36px, 6vw, 88px);
@@ -887,10 +785,7 @@ body.cursor-erase {
   opacity: 0.8;
 }
 
-.library-section {
-  margin-bottom: 60px;
-}
-
+.library-section { margin-bottom: 60px; }
 .library-section h2 {
   margin-bottom: 20px;
   font-size: 32px;
@@ -930,27 +825,30 @@ body.cursor-erase {
 }
 
 .search-container {
-  margin-bottom: 40px;
+  margin-top: 30px !important; /* Отступ сверху от кнопки "На главную" */
+  margin-bottom: 40px !important; /* Отступ снизу до заголовка "Коллекция" */
+  width: 100%;
   max-width: 600px;
+  box-sizing: border-box;
+  padding: 0 5px; /* Легкий защитный отступ по бокам */
 }
 
 .search-input {
-  width: 100%;
+  box-sizing: border-box !important; /* Включает padding внутрь ширины 100% */
+  width: 100% !important;
+  display: block;
   padding: 12px 20px;
   font-size: 16px;
   font-family: 'Hauora', sans-serif;
   border: 1px solid #111;
-  border-radius: 999px; /* Скругленный стиль как у твоих кнопок */
+  border-radius: 999px;
   background: transparent;
   outline: none;
   transition: box-shadow 0.3s ease;
 }
 
-.search-input:focus {
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+.search-input:focus { box-shadow: 0 0 10px rgba(0,0,0,0.1); }
 
-/* Контейнер личного кабинета */
 .profile-container {
   max-width: 900px;
   margin: 40px auto;
@@ -961,7 +859,6 @@ body.cursor-erase {
   font-family: 'Hauora', sans-serif;
 }
 
-/* Шапка профиля */
 .profile-header {
   display: flex;
   align-items: center;
@@ -974,7 +871,7 @@ body.cursor-erase {
 .profile-avatar {
   width: 100px;
   height: 100px;
-  background: #e8d5b5; /* Твой фирменный цвет книги Чехова */
+  background: #e8d5b5;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -996,7 +893,6 @@ body.cursor-erase {
   font-size: 16px;
 }
 
-/* Сетка карточек */
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1011,10 +907,7 @@ body.cursor-erase {
   transition: transform 0.3s ease;
 }
 
-.profile-card:hover {
-  transform: translateY(-5px);
-}
-
+.profile-card:hover { transform: translateY(-5px); }
 .profile-card h3 {
   font-family: 'Gogol', serif;
   font-size: 22px;
@@ -1024,7 +917,6 @@ body.cursor-erase {
   display: inline-block;
 }
 
-/* Статистика */
 .stats-row {
   display: flex;
   justify-content: space-between;
@@ -1037,14 +929,13 @@ body.cursor-erase {
   font-weight: 600;
 }
 
-/* Кнопки в профиле */
 .profile-btn {
   width: 100%;
   padding: 12px;
   margin-bottom: 10px;
   border: 1px solid #111;
   background: transparent;
-  border-radius: 999px; /* Pill-shape как в библиотеке */
+  border-radius: 999px;
   cursor: pointer;
   font-family: 'Hauora', sans-serif;
   font-size: 14px;
@@ -1136,34 +1027,11 @@ body.cursor-erase {
   cursor: pointer;
 }
 
-/* Стили для Hint-модалки */
-.hint-modal .hint-icon {
-  font-size: 40px;
-  margin-bottom: 15px;
-}
-
-.hint-modal p {
-  color: #555;
-  line-height: 1.5;
-  margin-bottom: 25px;
-}
-
-.btn-modal-secondary {
-  background: transparent;
-  border: none;
-  color: #888;
-  cursor: pointer;
-  margin-top: 15px;
-  font-size: 14px;
-  text-decoration: underline;
-}
-
 .combined-container {
   display: grid;
-  /* Левая колонка под текст, правая под картинку */
   grid-template-columns: 2.2fr 1fr; 
   gap: 80px;
-  align-items: start; /* Выравнивание по верхнему краю */
+  align-items: start; 
   margin-top: 100px;
   margin-bottom: 120px;
 }
@@ -1171,41 +1039,28 @@ body.cursor-erase {
 .combined-left {
   display: flex;
   flex-direction: column;
-  gap: 80px; /* Расстояние между "Чтением" и "Библиотекой" */
+  gap: 80px; 
 }
 
 .big-text1 {
   font-size: clamp(20px, 3vw, 40px);
   line-height: 1;
   max-width: 820px;
-  
 }
 
-/* Контейнер правой колонки */
 .combined-right {
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Это прижмет всё содержимое (включая картинку) вправо */
+  align-items: flex-end; 
   width: 100%;
 }
 
-/* Сама картинка */
 .tall-halftone-img {
-  height: 580px; /* Твоя фиксированная высота */
-  width: auto;   /* Ширина подстроится пропорционально */
-  
-  /* Гарантируем привязку к правому краю */
+  height: 580px; 
+  width: auto;   
   display: block;
   margin-left: auto; 
-  
-  /* Если используешь Grid в родителе, можно добавить и это: */
   justify-self: end;
-
-}
-
-.text-area {
-  position: relative;
-  z-index: 10; /* Поднимаем текст выше всего остального */
 }
 
 .paragraph {
@@ -1223,7 +1078,6 @@ body.cursor-erase {
     gap: 0;
   }
 
-  /* Читалка: скрываем сайдбар для чистоты интерфейса на мобилках */
   .notes-sidebar {
     display: none; 
   }
@@ -1233,10 +1087,9 @@ body.cursor-erase {
     padding: 20px;
     width: 100%;
     box-shadow: none;
-    background-attachment: scroll; /* Улучшает производительность на мобилках */
+    background-attachment: scroll;
   }
 
-  /* Тулбар: фиксируем снизу для удобства управления пальцем */
   .toolbar-wrapper {
     position: fixed;
     top: auto;
@@ -1255,69 +1108,439 @@ body.cursor-erase {
   }
 }
 
-/* Смартфоны */
+/* Смартфоны (Экран комиссии) */
 @media (max-width: 768px) {
-  /* 1. ГЛАВНАЯ СТРАНИЦА: Отступы и Кнопки */
+  
+  /* 1. УБИРАЕМ ГИГАНТСКИЕ ДЫРЫ И ОТСТУПЫ */
   .landing {
-    padding: 30px 20px;
+    padding: 20px 15px !important;
   }
 
-  .hero, .description, .about, .combined-container {
-    margin-bottom: 40px !important; /* Уменьшаем гигантские дыры */
-    margin-top: 0 !important;
+  .hero {
+    margin-bottom: 30px !important; /* Схлопываем дыру под заголовком */
     grid-template-columns: 1fr !important;
-    gap: 20px;
+    gap: 15px !important;
   }
 
-  /* Исправление кнопок: теперь они с отступом и не гигантские */
-  .hero-left .btn, .content-actions .btn {
+  .hero-left h1 {
+    margin-bottom: 20px !important;
+    font-size: 38px !important; /* Чуть компактнее заголовок */
+    text-align: center;
+  }
+
+  .description {
+    margin: 20px 0 30px !important; /* Убираем пустые поля вокруг цитаты */
+  }
+
+  .big-text, .big-text1 {
+    margin-left: 0 !important; /* Уничтожаем отступ 15% слева */
+    font-size: 20px !important;
+    line-height: 1.2 !important;
+    text-align: center;
+  }
+
+  .about {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+    margin-bottom: 30px !important;
+  }
+
+  .about-text, .content-text {
+    max-width: 100% !important;
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+    margin-top: 0 !important;
+    margin-bottom: 15px !important;
+  }
+
+  .combined-container {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-top: 25px !important;
+    margin-bottom: 30px !important;
+  }
+
+  .combined-left {
+    gap: 30px !important;
+  }
+
+  .story-block {
+    margin-bottom: 40px !important; /* Вместо десктопных 120px */
+  }
+
+  /* 2. КНОПКИ И КАРТИНКИ */
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    max-width: 320px; /* Чтобы не растягивались на весь экран планшета */
-    margin: 0 auto 12px auto !important; /* Центрируем и добавляем отступ СНИЗУ */
-    display: block;
   }
 
-  .hero-left .btn:last-child, .content-actions .btn:last-child {
+  .hero-left .btn {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 0 10px 0 !important; /* Кнопки встают ровно друг под друга */
+    padding: 8px 20px !important;
+    font-size: 15px !important;
+  }
+
+  .hero-left .btn:last-child {
     margin-bottom: 0 !important;
   }
 
-  /* 2. ЛИЧНЫЙ КАБИНЕТ: Карточки в ряд */
-  .profile-container {
-    padding: 20px;
-    margin: 10px;
-  }
-
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-  }
-
-  .profile-grid {
-    grid-template-columns: 1fr; /* Статистика строго вертикально */
-    gap: 20px;
-  }
-
-  .profile-card {
-    padding: 20px;
-  }
-
-  /* 3. ШРИФТЫ И КАРТИНКИ */
-  .hand {
-    font-size: 32px !important;
-    line-height: 1.1 !important;
-    text-align: center;
+  .hero-right {
+    display: none !important; /* Полностью убираем ломающуюся пустую область */
   }
 
   .tall-halftone-img {
-    height: 300px !important; /* Ограничиваем высоту на мобилке */
-    width: 100% !important;
-    object-fit: cover;
-    transform: rotate(0deg) !important; /* Убираем наклон для стабильности верстки */
+    height: 240px !important; /* Компактный размер графики для телефона */
+    width: auto !important;
+    margin: 0 auto !important;
+    display: block;
   }
 
   .combined-right {
-    order: -1; /* Картинка над текстом */
+    align-items: center !important;
+    width: 100%;
+  }
+
+  /* 3. ВОЗВРАЩАЕМ И ЧИНИМ БУКШЕЛФ (АККОРДЕОН) */
+  .bookshelf {
+    margin-top: 25px !important;
+    margin-bottom: 25px !important;
+    height: 320px !important; /* Фиксируем высоту полки на мобилке */
+    display: flex !important; /* Принудительно заставляем его показываться в ряд */
+    flex-direction: row !important;
+    gap: 6px !important;
+    overflow-x: auto !important; /* Даем возможность листать полку пальцем */
+    padding-bottom: 10px !important;
+    width: 100% !important;
+  }
+
+  .book-item {
+    flex: 0 0 38px !important; /* Закрытые корешки становятся уже, чтобы все влезали */
+    height: 290px !important;
+  }
+
+  .book-item.active {
+    flex: 0 0 200px !important; /* Ограничиваем раскрытие книги, чтобы не ломать экран */
+  }
+
+  .book-spine {
+    width: 38px !important;
+    min-width: 38px !important;
+  }
+
+  .spine-title {
+    font-size: 16px !important;
+  }
+
+  .cover-inner {
+    width: 150px !important;
+    height: 250px !important;
+    padding: 10px !important;
+  }
+
+  .cover-title {
+    font-size: 14px !important;
+    margin-top: 0 !important;
+  }
+
+  .cover-author {
+    font-size: 11px !important;
+  }
+
+  .read-btn {
+    margin-top: 8px !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+  }
+
+  /* Шрифты-акценты Литературного стиля */
+  .accent, .accent1 {
+    font-size: 32px !important;
+    margin-left: 4px !important;
+    display: inline !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .library-page {
+    padding: 30px 15px !important; /* Уменьшаем гигантские поля самой страницы */
+  }
+
+  .library-header h1 {
+    font-size: 42px !important; /* Делаем заголовок "БИБЛИОТЕКА" аккуратным */
+    margin-bottom: 20px !important;
+    text-align: center;
+  }
+
+  /* Центрируем кнопку "На главную" на мобилке, чтобы смотрелось аккуратно */
+  .library-header .btn {
+    display: block;
+    margin: 0 auto !important;
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+  }
+  
+  .library-section h2 {
+    font-size: 26px !important;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   ОБНОВЛЕННЫЙ ХЭДЕР, ЕДИНЫЙ СТИЛЬ КНОПОК И ФИКС ФОРМЫ (МЕДИА-ЗАПРОС)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  /* 1. Общая сетка личного кабинета и редактора */
+  .editor-layout {
+    flex-direction: column !important;
+    padding: 15px !important;
+    gap: 15px !important;
+  }
+
+/* 2. Чистый хэдер без рваного края (ВСЁ строго в один ряд) */
+  .editor-sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative !important;
+    top: 0 !important;
+    box-sizing: border-box;
+    padding: 10px 12px !important;
+    margin-bottom: 10px !important;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+    clip-path: none !important; 
+
+    /* Заставляем САМ хэдер стать флекс-контейнером */
+    display: flex !important;
+    flex-direction: row !important; /* Выстраиваем всё внутри в одну линию */
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+  }
+
+  .editor-sidebar h2 {
+    display: none !important;
+  }
+
+  /* Контейнер для ссылок плавно сливается с общим рядом */
+  .editor-sidebar nav {
+    margin-top: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex: 2 !important; /* Занимает две трети места */
+    width: auto !important;
+  }
+
+  /* 3. ОДНОТИПНЫЕ КНОПКИ (И ссылки, и кнопка на главную делят экран) */
+  .editor-sidebar a, 
+  .editor-sidebar button {
+    box-sizing: border-box !important;
+    font-family: 'Hauora', sans-serif !important;
+    font-size: 11px !important; /* Немного уменьшили, чтобы гарантированно влезло на iPhone */
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    color: #111 !important;
+    
+    padding: 8px 6px !important; /* Минимальные паддинги для компактности */
+    border: 1px solid #111 !important;
+    border-radius: 999px !important; 
+    background: transparent !important;
+    
+    text-align: center;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    flex: 1 !important; /* Каждая кнопочка честно забирает свою долю места */
+    white-space: nowrap !important;
+  }
+
+  /* Кнопка "На главную" (чуть-чуть поджимаем флекс, чтобы не ломала пропорции) */
+  .editor-sidebar button {
+    flex: 1 !important;
+  }
+
+  /* Активное состояние */
+  .editor-sidebar a.active {
+    background: #111 !important;
+    color: #fff !important;
+  }
+
+  /* 4. РАСПРАВЛЯЕМ КОНТЕНТ И ИСПРАВЛЯЕМ ФОРМУ СОЗДАНИЯ КНИГИ */
+  .editor-content, .profile-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 20px 15px !important;
+    margin: 0 !important;
+    border-radius: 16px !important;
+  }
+
+  /* Фикс полей ввода (input и textarea), чтобы они не уползали за рамки */
+  .editor-content input,
+  .editor-content textarea {
+    box-sizing: border-box !important; /* Запирает padding внутри 100% ширины */
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block;
+    margin-bottom: 15px !important;
+  }
+
+  /* 5. Адаптация карточек и списков */
+  .profile-grid, .books-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  .book-card {
+    padding: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Выпрямляем кнопки действий внутри карточек книг под один мобильный стандарт */
+  .book-card button, .btn-editor {
+    width: 100% !important;
+    box-sizing: border-box;
+    margin-right: 0 !important;
+    margin-bottom: 8px !important;
+    padding: 10px 20px !important;
+    border-radius: 999px !important; /* Поддерживаем скругленный pill-стиль */
+  }
+  
+  .book-card button:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Экран совсем маленьких телефонов */
+@media (max-width: 480px) {
+  .editor-sidebar nav {
+    flex-wrap: wrap !important; /* Если экрану совсем тесно, кнопки перенесутся */
+  }
+  .editor-sidebar a, .editor-sidebar button {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+}
+
+/* ==========================================================================
+   ФИНАЛЬНАЯ МОБИЛЬНАЯ АДАПТАЦИЯ МОДУЛЯ ЧТЕНИЯ (СТРАНИЦА КНИГИ)
+   ========================================================================== */
+
+/* Планшеты и вертикальные экраны */
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column !important; /* Разворачиваем вертикально: Текст сверху, Заметки снизу */
+    padding: 12px !important;
+    gap: 20px !important;
+  }
+
+  /* Текст книги: расправляется на всю ширину */
+  .text-area {
+    margin-left: 0 !important;
+    padding: clamp(15px, 4vw, 30px) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    background-attachment: scroll !important;
+  }
+
+  /* Переносим блок заметок ПОД текст книги */
+  .notes-sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative !important;
+    top: 0 !important;
+    max-height: none !important; /* Даем ему раскрыться полностью вниз */
+    overflow-y: visible !important;
+    box-sizing: border-box !important;
+    padding: 20px 15px !important;
+    margin-top: 40px !important; /* Отделяем красивой паузой от текста книги */
+    
+    /* Меняем рваный край: теперь он аккуратно рвется СВЕРХУ, отделяя блок от книги */
+    clip-path: polygon(
+      0% 3%, 15% 1%, 35% 4%, 55% 2%, 75% 5%, 100% 2%,
+      100% 100%, 0% 100%
+    ) !important;
+  }
+
+  .story-block {
+    margin-bottom: 40px !important; /* Ужимаем десктопные дыры */
+  }
+
+  /* Тулбар управления маркерами фиксируем снизу по центру экрана */
+  .toolbar-wrapper {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 16px !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    z-index: 9999 !important; /* Поверх всего контента */
+  }
+
+  .toolbar {
+    margin: 0 auto !important;
+    width: fit-content !important;
+    padding: 10px 20px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(10px) !important; /* Эффект размытия стекла */
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 999px !important; /* Идеальный овальный pill-стиль */
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+  }
+}
+
+/* Смартфоны */
+@media (max-width: 768px) {
+  .text-area p {
+    font-size: 15px !important; /* Идеальный размер для чтения с телефона */
+    line-height: 1.6 !important;
+    text-align: justify !important;
+    margin-bottom: 15px !important;
+  }
+
+  .story-title {
+    font-size: 32px !important; /* Компактный аккуратный заголовок книги */
+    text-align: center !important;
+  }
+
+  .story-author {
+    font-size: 16px !important;
+    text-align: center !important;
+    margin-bottom: 25px !important;
+  }
+
+  .story-content {
+    text-indent: 30px !important; /* Чуть уменьшаем абзацный отступ на узком экране */
+  }
+
+  /* Фиксим инпуты внутри заметок, чтобы не ломали ширину */
+  .notes-search-container {
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .notes-sidebar textarea {
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  
+  .note-item {
+    padding-color: #eee;
   }
 }
