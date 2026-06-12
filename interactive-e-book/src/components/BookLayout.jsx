@@ -7,8 +7,8 @@ import AuthModal from "./AuthModal";
 import HintModal from "./HintModal";
 import decor from "../assets/ornament1.png";
 
-const API_URL = "https://diploma-backend-ebqp.onrender.com//api/books";
-const NOTES_API = "https://diploma-backend-ebqp.onrender.com//api/notes";
+const API_URL = "https://diploma-backend-ebqp.onrender.com/api/books";
+const NOTES_API = "https://diploma-backend-ebqp.onrender.com/api/notes";
 
 function BookLayout({ isLoggedIn, user, onLogin }) {
 

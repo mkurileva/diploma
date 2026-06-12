@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const API_URL = "https://diploma-backend-ebqp.onrender.com//api/books";
+const API_URL = "https://diploma-backend-ebqp.onrender.com/api/books";
 
 // 1. Обязательно принимаем user из пропсов
 export default function BookForm({ user }) {

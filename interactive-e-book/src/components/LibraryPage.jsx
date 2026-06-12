@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "https://diploma-backend-ebqp.onrender.com//api/books";
+const API_URL = "https://diploma-backend-ebqp.onrender.com/api/books";
 
 export default function LibraryPage() {
   const navigate = useNavigate();
