@@ -14,33 +14,48 @@ export default function Profile({ user, onLogout }) {
   const [message, setMessage] = useState({ text: "", type: "" });
 
   useEffect(() => {
-    const fetchUserStats = async () => {
-      if (!user?.id) return;
+const fetchUserStats = async () => {
+  if (!user?.id) return;
 
-      try {
-        setLoading(true);
-        // Используем существующий фильтр для книг и новый для заметок
-        const [booksRes, notesRes] = await Promise.all([
-          fetch(`https://diploma-backend-ebqp.onrender.com/api/books?userId=${user.id}`),
-          fetch(`https://diploma-backend-ebqp.onrender.com/api/notes/user/${user.id}`)
-        ]);
+  try {
+    setLoading(true);
+    
+    // Принудительно делаем ID числом, чтобы C# его понял
+    const numericUserId = Number(user.id);
 
-        const booksData = await booksRes.json();
-        const notesData = await notesRes.json();
+    const [booksRes, notesRes] = await Promise.all([
+      fetch(`https://diploma-backend-ebqp.onrender.com/api/books?userId=${numericUserId}`),
+      fetch(`https://diploma-backend-ebqp.onrender.com/api/notes/user/${numericUserId}`)
+    ]);
 
-        setStats({
-          booksCount: booksData.length,
-          notesCount: notesData.length,
-          joinDate: user.createdAt 
-            ? new Date(user.createdAt).toLocaleDateString() 
-            : "Не указана"
-        });
-      } catch (error) {
-        console.error("Ошибка при загрузке статистики:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Безопасно парсим книги
+    let booksCount = 0;
+    if (booksRes.ok) {
+      const booksData = await booksRes.json();
+      booksCount = Array.isArray(booksData) ? booksData.length : 0;
+    }
+
+    // Безопасно парсим заметки
+    let notesCount = 0;
+    if (notesRes.ok) {
+      const notesData = await notesRes.json();
+      notesCount = Array.isArray(notesData) ? notesData.length : 0;
+    }
+
+    setStats({
+      booksCount: booksCount,
+      notesCount: notesCount,
+      joinDate: user.createdAt 
+        ? new Date(user.createdAt).toLocaleDateString()
+        : new Date().toLocaleDateString() // если даты нет, покажем текущую
+    });
+
+  } catch (error) {
+    console.error("Ошибка при загрузке статистики профиля:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchUserStats();
   }, [user]);
