@@ -21,8 +21,8 @@ export default function Profile({ user, onLogout }) {
         setLoading(true);
         // Используем существующий фильтр для книг и новый для заметок
         const [booksRes, notesRes] = await Promise.all([
-          fetch(`http://localhost:5277/api/books?userId=${user.id}`),
-          fetch(`http://localhost:5277/api/notes/user/${user.id}`)
+          fetch(`https://diploma-backend-ebqp.onrender.com//api/books?userId=${user.id}`),
+          fetch(`https://diploma-backend-ebqp.onrender.com//api/notes/user/${user.id}`)
         ]);
 
         const booksData = await booksRes.json();
@@ -48,7 +48,7 @@ export default function Profile({ user, onLogout }) {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:5277/api/users/change-password`, {
+      const res = await fetch(`https://diploma-backend-ebqp.onrender.com//api/users/change-password`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

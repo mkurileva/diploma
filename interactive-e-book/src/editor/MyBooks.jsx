@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BookCard from "./BookCard";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:5277/api/books";
+const API_URL = "https://diploma-backend-ebqp.onrender.com//api/books";
 
 // 1. Добавляем проп { user }
 export default function MyBooks({ user }) {

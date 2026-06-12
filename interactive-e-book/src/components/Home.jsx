@@ -41,7 +41,7 @@ const Bookshelf = () => {
 useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("http://localhost:5277/api/books?all=true");
+        const response = await fetch("https://diploma-backend-ebqp.onrender.com//api/books?all=true");
         const data = await response.json();
 
         // Теперь просто мапим всё, что пришло из базы

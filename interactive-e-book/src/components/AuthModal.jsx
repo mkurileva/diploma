@@ -22,7 +22,7 @@ export default function AuthModal({ isOpen, onClose, onLogin }) {
       : { email, password };
 
     try {
-      const response = await fetch(`http://localhost:5277${endpoint}`, {
+      const response = await fetch(`https://diploma-backend-ebqp.onrender.com/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
