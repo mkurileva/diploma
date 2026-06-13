@@ -65,13 +65,14 @@ function Paragraph({
       selection.removeAllRanges();
       return;
     }
+  const preRange = range.cloneRange();
+  preRange.selectNodeContents(paragraphEl);
+  preRange.setEnd(range.startContainer, range.startOffset);
 
-    const preRange = range.cloneRange();
-    preRange.selectNodeContents(paragraphEl);
-    preRange.setEnd(range.startContainer, range.startOffset);
-
-    const start = preRange.toString().length;
-    const end = start + selectedText.length;
+  // ИСПРАВЛЕНИЕ: Очищаем строку от невидимых символов возврата каретки (\r) перед подсчетом длины
+  const cleanPreRangeText = preRange.toString().replace(/\r/g, "");
+  const start = cleanPreRangeText.length; 
+  const end = start + selectedText.length;
 
     if (start === end) return;
 
