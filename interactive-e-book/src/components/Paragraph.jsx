@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Paragraph({
   text,
@@ -12,6 +12,8 @@ function Paragraph({
   showToast,
 }) {
   const [showNoteFor, setShowNoteFor] = useState(null);
+  // Локальный стейт для текста внутри всплывающего окошка
+  const [popupDraft, setPopupDraft] = useState("");
 
   const paragraphHighlights = highlights
     .filter(
@@ -21,32 +23,40 @@ function Paragraph({
     )
     .sort((a, b) => a.start - b.start);
 
+  // Синхронизируем локальный текст в поп-апе при открытии конкретной заметки
+  useEffect(() => {
+    if (showNoteFor) {
+      const currentHighlight = paragraphHighlights.find((h) => h.id === showNoteFor);
+      setPopupDraft(currentHighlight?.note || "");
+    } else {
+      setPopupDraft("");
+    }
+  }, [showNoteFor, highlights]);
+
   const isOverlapping = (start, end) => {
     return paragraphHighlights.some(
       (h) => !(end <= h.start || start >= h.end)
     );
   };
 
-const handleMouseUp = (e) => {
-  if (activeTool !== "highlight") return;
+  const handleMouseUp = (e) => {
+    if (activeTool !== "highlight") return;
 
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
 
-  // ВОТ ЭТОЙ СТРОЧКИ У ТЕБЯ НЕ ХВАТАЕТ:
-  const range = selection.getRangeAt(0); 
+    const range = selection.getRangeAt(0); 
 
-  const selectedText = selection.toString().trim();
-  if (!selectedText) return;
+    const selectedText = selection.toString().trim();
+    if (!selectedText) return;
 
-  const paragraphEl = e.currentTarget;
+    const paragraphEl = e.currentTarget;
 
-  // ПРОВЕРКА на абзац (которая у тебя работает)
-  if (!paragraphEl.contains(selection.anchorNode)) {
-    showToast("Выделяйте текст только внутри одного абзаца", "error");
-    selection.removeAllRanges();
-    return;
-  }
+    if (!paragraphEl.contains(selection.anchorNode)) {
+      showToast("Выделяйте текст только внутри одного абзаца", "error");
+      selection.removeAllRanges();
+      return;
+    }
   
     if (
       range.startContainer.parentElement?.closest(".highlight") ||
@@ -112,6 +122,12 @@ const handleMouseUp = (e) => {
 
   parts.push(text.slice(lastIndex));
 
+  // Функция сохранения, которая вызывается по кнопке "Сохранить"
+  const handleSaveClick = () => {
+    onUpdateNote(showNoteFor, popupDraft); // Отправляем готовый драфт в BookLayout и на сервер
+    setShowNoteFor(null); // Закрываем поп-ап
+  };
+
   return (
     <>
       <p className="paragraph" onMouseUp={handleMouseUp}>
@@ -122,16 +138,12 @@ const handleMouseUp = (e) => {
         <div className="note-popup">
           <textarea
             placeholder="Написать заметку..."
-            value={
-              paragraphHighlights.find((h) => h.id === showNoteFor)?.note || ""
-            }
-            onChange={(e) =>
-              onUpdateNote(showNoteFor, e.target.value)
-            }
+            value={popupDraft} // Привязываем к локальному стейту
+            onChange={(e) => setPopupDraft(e.target.value)} // Быстрый локальный ввод без лагов!
           />
           <button
             className="note-btn"
-            onClick={() => setShowNoteFor(null)}
+            onClick={handleSaveClick} // Тяжелый апдейт только при клике на Сохранить
           >
             Сохранить
           </button>
@@ -142,7 +154,6 @@ const handleMouseUp = (e) => {
 }
 
 export default Paragraph;
-
 
 
 
