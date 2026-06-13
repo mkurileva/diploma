@@ -891,6 +891,11 @@ button, input[type="button"], input[type="submit"] {
 .profile-info h1 {
   font-size: 36px;
   margin: 0 0 5px 0;
+  font-size: calc(1.5rem + 1vw); /* Резиновый размер шрифта под разные экраны */
+  word-wrap: break-word; /* Переносит длинное слово на новую строку, если оно не влезает */
+  word-break: break-all; /* Подстраховка для очень длинных ников без пробелов */
+  overflow-wrap: break-word;
+  margin-bottom: 5px;
 }
 
 .profile-email {
