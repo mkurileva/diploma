@@ -165,10 +165,20 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
     }
   };
 
-  // 5. Обновление текста заметки
+  // 5. Обновление текста заметки (Оптимистичное обновление)
   const updateNote = async (highlightId, noteText) => {
     if (!user?.id) return;
 
+    // Сохраняем предыдущее состояние на случай ошибки сервера для отката
+    let previousHighlights;
+
+    // МГНОВЕННО обновляем локальное состояние в React, интерфейс больше не лагает!
+    setHighlights((prev) => {
+      previousHighlights = prev;
+      return prev.map((h) => (h.id === highlightId ? { ...h, note: noteText } : h));
+    });
+
+    // Отправляем запрос на сервер в фоновом режиме
     try {
       const res = await fetch(`${NOTES_API}/${highlightId}?userId=${user.id}`, {
         method: "PUT",
@@ -180,13 +190,16 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
         }),
       });
 
-      if (res.ok) {
-        setHighlights((prev) =>
-          prev.map((h) => (h.id === highlightId ? { ...h, note: noteText } : h))
-        );
+      if (!res.ok) {
+        throw new Error("Сервер вернул ошибку при сохранении заметки");
       }
     } catch (err) {
-      console.error("Ошибка обновления заметки:", err);
+      console.error("Ошибка обновления заметки на сервере:", err);
+      // Если сервер ответил ошибкой, незаметно возвращаем старый текст назад
+      if (previousHighlights) {
+        setHighlights(previousHighlights);
+      }
+      showToast("Не удалось сохранить изменения на сервере", "error");
     }
   };
 
@@ -221,7 +234,7 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
         contentsItems={contentsItems}
         isLoggedIn={isLoggedIn}
         onAuthClick={() => setIsAuthOpen(true)}
-        isMobile={isMobile} // Передаем признак мобильного экрана в тулбар
+        isMobile={isMobile} 
       />
 
       <div className="layout">
