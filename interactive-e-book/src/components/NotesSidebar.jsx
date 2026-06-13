@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 function NotesSidebar({
   highlights = [],
@@ -7,15 +7,11 @@ function NotesSidebar({
 }) {
   const [editingId, setEditingId] = useState(null)
   const [draft, setDraft] = useState("")
-  const [localNotes, setLocalNotes] = useState([])
   const [expandedId, setExpandedId] = useState(null)
-  const [searchQuery, setSearchQuery] = useState("") // Состояние поиска
+  const [searchQuery, setSearchQuery] = useState("") 
 
-  useEffect(() => {
-    setLocalNotes(highlights)
-  }, [highlights])
-
-  const allNotes = localNotes.filter((h) => h.note?.trim())
+  // Берем заметки напрямую из пропсов, чтобы исключить лишние зацикливания стейтов
+  const allNotes = highlights.filter((h) => h.note?.trim())
 
   // Фильтрация заметок по поисковому запросу
   const filteredNotes = allNotes.filter((h) => {
@@ -46,11 +42,7 @@ function NotesSidebar({
   }
 
   const saveNote = (id) => {
-    setLocalNotes((prev) =>
-      prev.map((h) =>
-        h.id === id ? { ...h, note: draft } : h
-      )
-    )
+    // Вызываем тяжелое обновление только по клику на кнопку "Сохранить"!
     onUpdateNote(id, draft)
     setEditingId(null)
     setDraft("")
@@ -59,7 +51,6 @@ function NotesSidebar({
   const deleteNote = (id) => {
     const confirmDelete = window.confirm("Удалить заметку и выделение?")
     if (!confirmDelete) return
-    setLocalNotes((prev) => prev.filter((h) => h.id !== id))
     if (editingId === id) { setEditingId(null); setDraft(""); }
     if (expandedId === id) { setExpandedId(null); }
     onRemoveHighlight(id)
@@ -69,7 +60,7 @@ function NotesSidebar({
     <aside className="notes-sidebar">
       <h3 className="note-title">Заметки</h3>
 
-      {/* Поле поиска в стиле библиотеки */}
+      {/* Поле поиска */}
       <div className="notes-search-container">
         <input
           type="text"
@@ -109,6 +100,7 @@ function NotesSidebar({
                 <textarea
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
+                  style={{ width: "100%", minHeight: "60px", marginTop: "8px" }}
                 />
                 <div className="note-actions">
                   <button className="note-btn" onClick={() => saveNote(h.id)}>
