@@ -22,8 +22,6 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Теперь ID всегда берется из URL. 
-  // Для Чехова в базе тоже будет обычный числовой ID.
   const currentBookId = id ? Number(id) : null;
 
   const [highlights, setHighlights] = useState([]);
@@ -34,6 +32,22 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
   const [bookError, setBookError] = useState("");
   const [isHintOpen, setIsHintOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  // Состояния для адаптивности под мобильные устройства
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobileAlertOpen, setIsMobileAlertOpen] = useState(window.innerWidth <= 768);
+
+  // Отслеживание изменения ширины экрана
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (!mobile) setIsMobileAlertOpen(false);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // 1. Загрузка данных книги
   useEffect(() => {
@@ -103,7 +117,7 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
         },
         body: JSON.stringify({
           bookId: currentBookId,
-          userId: user.id, // Привязываем заметку к текущему пользователю
+          userId: user.id,
           paragraphIndex: data.paragraphIndex,
           start: data.start,
           end: data.end,
@@ -137,7 +151,6 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
     if (!user?.id) return;
 
     try {
-      // Передаем userId, чтобы сервер проверил права на удаление
       const res = await fetch(`${NOTES_API}/${highlightId}?userId=${user.id}`, {
         method: "DELETE",
       });
@@ -177,9 +190,8 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
     }
   };
 
-  const contentsItems = []; // Оставляем массив пустым, чтобы скрыть содержание
+  const contentsItems = [];
 
-  // Состояния загрузки и ошибок
   if (isLoadingBook) {
     return (
       <div className="layout">
@@ -207,6 +219,9 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
         activeTool={activeTool}
         onChangeTool={setActiveTool}
         contentsItems={contentsItems}
+        isLoggedIn={isLoggedIn}
+        onAuthClick={() => setIsAuthOpen(true)}
+        isMobile={isMobile} // Передаем признак мобильного экрана в тулбар
       />
 
       <div className="layout">
@@ -221,7 +236,6 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
           showToast={showToast}
         />
 
-        {/* Сайдбар показываем только авторизованным, либо в режиме гостя с заглушкой */}
         {isLoggedIn ? (
           <NotesSidebar
             highlights={highlights}
@@ -255,25 +269,71 @@ function BookLayout({ isLoggedIn, user, onLogin }) {
         onLogin={onLogin} 
       />
 
+      {/* Модалка с предупреждением для мобильных устройств */}
+      {isMobileAlertOpen && (
+        <div style={{
+          position: "fixed",
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 10000,
+          padding: "20px"
+        }}>
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "25px",
+            borderRadius: "16px",
+            maxWidth: "400px",
+            textAlign: "center",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+            fontFamily: "Hauora, sans-serif"
+          }}>
+            <h3 style={{ marginTop: 0, color: "#2c3e50", fontSize: "18px" }}>Обратите внимание</h3>
+            <p style={{ color: "#555", fontSize: "14px", lineHeight: "1.5", margin: "15px 0 20px" }}>
+              В мобильной версии вы можете комфортно читать произведения и просматривать свои заметки, созданные ранее.
+              <br /><br />
+              Однако создавать новые выделения и заметки с телефона пока нельзя. Чтобы использовать весь функционал сайта, зайдите с компьютера!
+            </p>
+            <button 
+              onClick={() => setIsMobileAlertOpen(false)}
+              style={{
+                backgroundColor: "#bbd0e5",
+                color: "#2c3e50",
+                border: "none",
+                padding: "10px 24px",
+                borderRadius: "20px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                fontSize: "14px",
+                transition: "background 0.2s"
+              }}
+            >
+              Понятно
+            </button>
+          </div>
+        </div>
+      )}
 
       {toast.message && (
-      <div className={`toast-message ${toast.type}`} style={{
-        position: 'fixed',
-        bottom: '30px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: toast.type === 'error' ? '#e74c3c' : '#333',
-        color: '#fff',
-        padding: '12px 24px',
-        borderRadius: '25px',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-        zIndex: 9999,
-        fontSize: '14px',
-        animation: 'fadeInUp 0.3s ease'
-      }}>
-        {toast.message}
-      </div>
-    )}
+        <div className={`toast-message ${toast.type}`} style={{
+          position: 'fixed',
+          bottom: '30px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: toast.type === 'error' ? '#e74c3c' : '#333',
+          color: '#fff',
+          padding: '12px 24px',
+          borderRadius: '25px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+          zIndex: 9999,
+          fontSize: '14px',
+          animation: 'fadeInUp 0.3s ease'
+        }}>
+          {toast.message}
+        </div>
+      )}
     </>
   );
 }

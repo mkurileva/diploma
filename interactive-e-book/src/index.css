@@ -29,6 +29,12 @@ body.cursor-erase {
   cursor: url("/cursors/eraser1.png") 8 24, auto;
 }
 
+button, input[type="button"], input[type="submit"] {
+  -webkit-appearance: none; /* Отключает стандартный дизайн iOS */
+  appearance: none;
+  color: inherit; /* Заставляет кнопку брать цвет текста, который прописала ты */
+}
+
 .toolbar-wrapper {
   position: sticky;
   top: 12px;
@@ -873,17 +879,16 @@ body.cursor-erase {
   height: 100px;
   background: #e8d5b5;
   border-radius: 50%;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 40px;
-  font-family: 'Gogol', serif;
   color: #111;
   box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
 }
 
 .profile-info h1 {
-  font-family: 'Gogol', serif;
   font-size: 36px;
   margin: 0 0 5px 0;
 }
@@ -1011,7 +1016,18 @@ body.cursor-erase {
   border: none;
   border-radius: 999px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 400;
+  margin-top: 10px;
+}
+
+.btn-modal-secondary {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 400;
   margin-top: 10px;
 }
 
@@ -1507,6 +1523,12 @@ body.cursor-erase {
 
 /* Смартфоны */
 @media (max-width: 768px) {
+
+  body { 
+    background-image: none !important;
+    background-color: #bbd0e5; /* Тот самый нежный голубой цвет из букшелфа */
+  }
+
   .text-area p {
     font-size: 15px !important; /* Идеальный размер для чтения с телефона */
     line-height: 1.6 !important;
